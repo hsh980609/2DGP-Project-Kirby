@@ -5,6 +5,14 @@ from pico2d import *
 
 
 def handle_events():
+    event_list = get_events()
+    for event in event_list:
+        if event.type == SDL_QUIT:
+            exit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            exit()
+        else:
+            pass
     pass
 
 
