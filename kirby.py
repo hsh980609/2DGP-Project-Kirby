@@ -12,13 +12,12 @@ class Idle:
 
     def do(self):
         self.Kirby.frame =(self.Kirby.frame +1) % 10
-        pass
 
     def exit(self):
         pass
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(self.Kirby.frame * 25, 0, 100, 100, self.Kirby.x, self.Kirby.y)
+            self.Kirby.image.clip_draw(self.Kirby.frame * 25, 0, 27, 25, self.Kirby.x, self.Kirby.y)
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_draw(self.Kirby.frame * 25, 0, 100, 100, self.Kirby.x, self.Kirby.y)
 
@@ -101,6 +100,7 @@ class Kirby:
 
 
     def update(self):
+        self.state_machine.update()
         pass
 
     def draw(self):
