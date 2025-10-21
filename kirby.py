@@ -14,6 +14,8 @@ class Idle:
 
     def exit(self):
         pass
+    def draw(self):
+        pass
 
 
 
@@ -62,6 +64,8 @@ class Suction:
 
 class Kirby:
     def __init__(self):
+        self.img = load_image('walk_sheet.png')
+
         self.IDLE = Idle(self)
         self.RUN = Run(self)
         self.FLY = Fly(self)
