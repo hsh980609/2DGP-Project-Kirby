@@ -1,5 +1,5 @@
 from pico2d import *
-
+from kirby import Kirby
 
 
 
@@ -17,13 +17,26 @@ def handle_events():
 
 
 def update_world():
+    for i in world:
+        i.update()
     pass
 
 
 def render_world():
+    clear_canvas()
+    for i in world:
+        i.draw()
+    update_canvas()
     pass
 
 def reset_world():
+    global world
+    global kirby
+
+    world = []
+
+    kirby = Kirby()
+    world.append(kirby)
     pass
 
 
@@ -34,5 +47,6 @@ while True:
     handle_events()
     update_world()
     render_world()
+    delay(0.05)
 
 close_canvas()
