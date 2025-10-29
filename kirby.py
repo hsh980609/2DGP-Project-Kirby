@@ -22,7 +22,7 @@ class Idle:
     def do(self):
         self.Kirby.frame =(self.Kirby.frame +1) % 10
 
-    def exit(self):
+    def exit(self,e):
         pass
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
@@ -36,12 +36,16 @@ class Run:
         self.Kirby = Kirby
 
     def enter(self,e):
-        self.Kirby.dir = 0
+        if right_down(e) or left_up(e):
+            self.Kirby.dir = self.Kirby.face_dir = 1
+        elif left_down(e) or right_up(e):
+            self.Kirby.dir = self.Kirby.face_dir = -1
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + 1) % 8
+        self.Kirby.x += self.Kirby.dir * 5
 
-    def exit(self):
+    def exit(self,e):
         pass
 
     def draw(self):
@@ -60,7 +64,7 @@ class Jump:
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + 1) % 10
 
-    def exit(self):
+    def exit(self,e):
         pass
 
     def draw(self):
@@ -150,5 +154,6 @@ class Kirby:
         self.state_machine.draw()
         pass
 
-    def handle_event(self):
+    def handle_event(self, event):
+        self.state_machine.handle_state_event(('INPUT', event))
         pass

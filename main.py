@@ -12,7 +12,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             exit()
         else:
-            pass
+            kirby.handle_event(event)
     pass
 
 
