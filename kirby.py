@@ -23,17 +23,23 @@ class Idle:
 
 
 class Run:
-    def __init__(self):
-        pass
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
 
     def enter(self):
-        pass
+        self.Kirby.dir = 0
 
     def do(self):
-        pass
+        self.Kirby.frame = (self.Kirby.frame + 1) % 8
 
     def exit(self):
         pass
+
+    def draw(self):
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 24, 3245, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 25, 0, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
 
 
 class Fly:
@@ -88,14 +94,15 @@ class Kirby:
         self.dir = 0
         self.image = load_image('Kirby_sheet.png')
 
-        self.IDLE = Idle(self)
+        # self.IDLE = Idle(self)
         # self.WALK = Walk(self)
-        # self.RUN = Run(self)
+        self.RUN = Run(self)
         # self.FLY = Fly(self)
         # self.SUCTION = Suction(self)
 
         self.state_machine = StateMachine(
-            self.IDLE,
+            # self.IDLE,
+            self.RUN
         )
 
 
