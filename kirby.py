@@ -28,7 +28,7 @@ class Idle:
         if self.Kirby.face_dir == 1:  # right
             self.Kirby.image.clip_draw(self.Kirby.frame * 25, 3360, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_draw(self.Kirby.frame * 25, 0, 25, 25, self.Kirby.x, self.Kirby.y)
+            self.Kirby.image.clip_composite_draw(self.Kirby.frame * 25, 3360, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
 
 
 class Run:
@@ -43,16 +43,16 @@ class Run:
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + 1) % 8
-        self.Kirby.x += self.Kirby.dir * 5
+        self.Kirby.x += self.Kirby.dir * 15
 
     def exit(self,e):
         pass
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 25, 3245, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 24, 3245, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 25, 0, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(5 + self.Kirby.frame * 24, 3245, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
 
 class Jump:
     def __init__(self, Kirby):
