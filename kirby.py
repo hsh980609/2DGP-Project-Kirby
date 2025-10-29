@@ -37,9 +37,30 @@ class Run:
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 24, 3245, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 25, 3245, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_draw(5 + self.Kirby.frame * 25, 0, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+
+class Jump:
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
+
+    def enter(self):
+        self.Kirby.dir = 0
+
+    def do(self):
+        self.Kirby.frame = (self.Kirby.frame + 1) % 10
+
+    def exit(self):
+        pass
+
+    def draw(self):
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(self.Kirby.frame * 26, 3290, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_draw(self.Kirby.frame * 25, 0, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+
+
 
 
 class Fly:
@@ -96,13 +117,15 @@ class Kirby:
 
         # self.IDLE = Idle(self)
         # self.WALK = Walk(self)
-        self.RUN = Run(self)
+        # self.RUN = Run(self)
         # self.FLY = Fly(self)
         # self.SUCTION = Suction(self)
+        self.JUMP = Jump(self)
 
         self.state_machine = StateMachine(
             # self.IDLE,
-            self.RUN
+            # self.RUN
+            self.JUMP
         )
 
 
