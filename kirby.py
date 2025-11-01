@@ -125,12 +125,23 @@ class Fly:
 class Suction:
     def __init__(self, Kirby):
         self.Kirby = Kirby
+        self.wait_time = 0
 
     def enter(self, e):
         self.Kirby.dir=0
+        self.Kirby.frame = 0
+        self.wait_time = 0
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + 1) % 5
+        self. wait_time += 1
+
+        if self.wait_time >= 2:
+            self.wait_time = 0
+
+            if self.Kirby.frame < 4:
+                self.Kirby.frame += 1
+            self.Kirby.frame = (self.Kirby.frame) % 5
+
 
     def exit(self, e):
         pass
