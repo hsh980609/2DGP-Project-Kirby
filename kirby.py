@@ -62,15 +62,29 @@ class Run:
 class Jump:
     def __init__(self, Kirby):
         self.Kirby = Kirby
+        self.jump_height = 10
+        self.gravity = 1
 
     def enter(self,e):
         self.Kirby.dir = 0
+        self.Kirby.frame = 0
+        self.Kirby.y_start = self.jump_height
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + 1) % 10
+        self.Kirby.y += self.Kirby.y_start
+        self.Kirby.y_start -=self.gravity
+
+        # 땅에 닿았는지 확인
+        if self.Kirby.y <=90:
+            self.Kirby.y = 90
+            self.Kirby.y_start = 0
+
+            self.Kirby.state_machine.change_state(self.Kirby.IDLE)
+
 
     def exit(self,e):
-        pass
+        self.Kirby.y_start = 0
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
@@ -127,7 +141,9 @@ class Walk:
 
 class Kirby:
     def __init__(self):
-        self.x, self.y =400, 100
+        self.x, self.y =400, 90
+        self.y_start = 0
+
         self.frame = 0
         self.face_dir = 1
         self.dir = 0
@@ -143,9 +159,9 @@ class Kirby:
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE :{x_down: self.JUMP, right_down: self.RUN, left_down: self.RUN, right_up: self.RUN, left_up: self.RUN},
-                self.RUN :{right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE},
-                self.JUMP:{x_up: self.IDLE,}
+                self.IDLE :{x_down: self.JUMP, right_down: self.RUN, left_down: self.RUN,},
+                self.RUN :{right_up: self.IDLE, left_up: self.IDLE,},
+                self.JUMP:{}
 
              }
 

@@ -23,3 +23,11 @@ class StateMachine:
                 self.cur_state = self.next_state
                 return
         print(f'처리되지 않은 이벤트 {event_to_string(event)}')
+
+    # 상태 전환 추가
+    def change_state(self, next_state, event=('INTERNAL', None)):
+        self.cur_state.exit(event)
+        self.next_state = next_state
+        self.next_state.enter(event)
+        print(f'{self.cur_state.__class__.__name__} ---- {event_to_string(event)} ----> {self.next_state.__class__.__name__}')
+        self.cur_state = self.next_state
