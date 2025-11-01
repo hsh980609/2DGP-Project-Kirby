@@ -13,6 +13,8 @@ def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
 def x_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_x
+def x_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_x
 
 
 class Idle:
@@ -74,7 +76,7 @@ class Jump:
         if self.Kirby.face_dir == 1:  # right
             self.Kirby.image.clip_draw(self.Kirby.frame * 26, 3290, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_draw(self.Kirby.frame * 25, 0, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(self.Kirby.frame * 26, 3290, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
 
 
 
@@ -141,8 +143,9 @@ class Kirby:
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE :{right_down: self.RUN, left_down: self.RUN, right_up: self.RUN, left_up: self.RUN},
+                self.IDLE :{x_down: self.JUMP, right_down: self.RUN, left_down: self.RUN, right_up: self.RUN, left_up: self.RUN},
                 self.RUN :{right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE},
+                self.JUMP:{x_up: self.IDLE,}
 
              }
 
