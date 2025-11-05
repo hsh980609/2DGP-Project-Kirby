@@ -1,4 +1,6 @@
 from pico2d import *
+
+import game_world
 from kirby import Kirby
 
 
@@ -17,27 +19,19 @@ def handle_events():
 
 
 def update_world():
-    for i in world:
-        i.update()
-    pass
+    game_world.update()
 
 
 def render_world():
     clear_canvas()
-    for i in world:
-        i.draw()
+    game_world.render()
     update_canvas()
-    pass
 
 def reset_world():
-    global world
     global kirby
 
-    world = []
-
     kirby = Kirby()
-    world.append(kirby)
-    pass
+    game_world.add_object(kirby)
 
 
 open_canvas()
