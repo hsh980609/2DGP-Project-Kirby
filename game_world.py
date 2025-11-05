@@ -1,4 +1,4 @@
-world =[]
+world =[[],[]]
 
 def add_object(o, depth=0):
     world[depth].append(o)
@@ -6,7 +6,7 @@ def add_object(o, depth=0):
 def add_objects(ol, depth=0):
     world[depth] += ol
 
-def remoce_object(o):
+def remove_object(o):
     for layer in world:
         if o in layer:
             layer.remove(o)

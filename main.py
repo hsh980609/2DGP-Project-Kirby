@@ -31,7 +31,7 @@ def reset_world():
     global kirby
 
     kirby = Kirby()
-    game_world.add_object(kirby)
+    game_world.add_object(kirby, 1)
 
 
 open_canvas()
