@@ -109,7 +109,6 @@ class Jump:
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 26, 3290, 26, 26, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
 
-
 class Fly:
     def __init__(self, Kirby):
         self.Kirby = Kirby
@@ -131,7 +130,6 @@ class Fly:
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 25, 3158, 23, 25, 0, 'h', self.Kirby.x,
                                                  self.Kirby.y, 100, 100)
 
-
 class Suction:
     def __init__(self, Kirby):
         self.Kirby = Kirby
@@ -142,6 +140,9 @@ class Suction:
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + SUCTION_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 5
+
+        if self.Kirby.frame >=4: # 4프레임에서 멈춤
+            self.Kirby.frame = 4
 
     def exit(self, e):
         pass
