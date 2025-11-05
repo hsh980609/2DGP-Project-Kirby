@@ -6,17 +6,41 @@ running = None
 stack = None
 
 def change_mode(mode):
-    pass
+    global stack
+    if (len(stack) > 0):
+        stack[-1].pause()
+    stack.append(mode)
+    mode.init()
 
 def push_mode(mode):
-    pass
+    global stack
+    if (len(stack) > 0):
+        stack[-1].pause()
+    stack.append(mode)
+    mode.init()
 
 def pop_mode():
-    pass
+    global stack
+    if (len(stack) > 0):
+        stack[-1].finish()
+        stack.pop()
+
+    if (len(stack) > 0):
+        stack[-1].resume()
+
+
 
 def quit():
     global running
     running = False
 
 def run(start_mode):
-    pass
+    global running, stack
+    running = True
+    stack = [start_mode]
+    start_mode.init()
+
+    while running:
+        stack[-1].handle_events()
+        stack[-1].update()
+        stack[-1].draw()
