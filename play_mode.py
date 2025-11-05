@@ -2,6 +2,7 @@ from pico2d import *
 
 import game_world
 from kirby import Kirby
+from background import Background
 
 kirby = None
 running = True
@@ -23,6 +24,9 @@ def init():
     global running
 
     running = True
+
+    background = Background()
+    game_world.add_object(background, 0)
 
     kirby = Kirby()
     game_world.add_object(kirby, 1)
