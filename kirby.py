@@ -29,6 +29,7 @@ def c_up(e):
 TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 1초에 2번 액션 수행
 IDLE_FRAMES_PER_ACTION = 10
+RUN_FRAMES_PER_ACTION = 8
 
 class Idle:
     def __init__(self, Kirby):
@@ -60,17 +61,17 @@ class Run:
             self.Kirby.dir = self.Kirby.face_dir = -1
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + 1) % 8
-        self.Kirby.x += self.Kirby.dir * 15
+        self.Kirby.frame = (self.Kirby.frame + RUN_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        self.Kirby.x += self.Kirby.dir * 1
 
     def exit(self,e):
         pass
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 24, 3245, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(5 + int(self.Kirby.frame) * 24, 3245, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(5 + self.Kirby.frame * 24, 3245, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(5 + int(self.Kirby.frame) * 24, 3245, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
 
 class Jump:
     def __init__(self, Kirby):
