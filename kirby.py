@@ -30,6 +30,7 @@ TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 1초에 2번 액션 수행
 IDLE_FRAMES_PER_ACTION = 10
 RUN_FRAMES_PER_ACTION = 8
+JUMP_FRAMES_PER_ACTION = 10
 
 class Idle:
     def __init__(self, Kirby):
@@ -85,7 +86,7 @@ class Jump:
         self.Kirby.y_start = self.jump_height
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + 1) % 10
+        self.Kirby.frame = (self.Kirby.frame + JUMP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
         self.Kirby.y += self.Kirby.y_start
         self.Kirby.y_start -=self.gravity
 
@@ -102,9 +103,9 @@ class Jump:
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(self.Kirby.frame * 26, 3290, 26, 26, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 26, 3290, 26, 26, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(self.Kirby.frame * 26, 3290, 26, 26, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 26, 3290, 26, 26, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
 
 
 class Fly:
