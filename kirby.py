@@ -1,6 +1,8 @@
 from pico2d import *
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_c, SDLK_x, SDLK_z
 
+import game_framework
+
 from state_machine import StateMachine
 
 def right_down(e):
@@ -24,9 +26,9 @@ def c_down(e):
 def c_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_c
 
-TIME_PER_ACTION = 0.5
-ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 10
+TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 1초에 2번 액션 수행
+IDLE_FRAMES_PER_ACTION = 10
 
 class Idle:
     def __init__(self, Kirby):
@@ -36,8 +38,7 @@ class Idle:
         self.Kirby.dir=0
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * 0.5) % 10
-        self.Kirby.frame =(self.Kirby.frame +1) % 10
+        self.Kirby.frame = (self.Kirby.frame + IDLE_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
 
     def exit(self,e):
         pass
