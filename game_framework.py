@@ -39,10 +39,18 @@ def run(start_mode):
     stack = [start_mode] # 스택에 시작 모드 추가
     start_mode.init()
 
+    global frame_time
+    frame_time = 0.0
+    current_time = time.time()
+
     while running: # 현재 모드에 대한 루프 실행
         stack[-1].handle_events()
         stack[-1].update()
         stack[-1].draw()
+
+        frame_time = time.time() - current_time
+        current_time += frame_time
+        frame_rate = 1.0 / frame_time
 
     while (len(stack) > 0): # 스택에 남은 모드들 차례대로 삭제
         stack[-1].finish()
