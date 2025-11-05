@@ -32,6 +32,7 @@ IDLE_FRAMES_PER_ACTION = 10
 RUN_FRAMES_PER_ACTION = 8
 JUMP_FRAMES_PER_ACTION = 10
 FLY_FRAMES_PER_ACTION = 5
+SUCTION_FRAMES_PER_ACTION = 5
 
 class Idle:
     def __init__(self, Kirby):
@@ -134,49 +135,25 @@ class Fly:
 class Suction:
     def __init__(self, Kirby):
         self.Kirby = Kirby
-        self.wait_time = 0
 
     def enter(self, e):
         self.Kirby.dir=0
         self.Kirby.frame = 0
-        self.wait_time = 0
 
     def do(self):
-        self. wait_time += 1
-
-        if self.wait_time >= 2:
-            self.wait_time = 0
-
-            if self.Kirby.frame < 4:
-                self.Kirby.frame += 1
-            self.Kirby.frame = (self.Kirby.frame) % 5
-
+        self.Kirby.frame = (self.Kirby.frame + SUCTION_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 5
 
     def exit(self, e):
         pass
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(self.Kirby.frame * 27, 3217, 27, 27, self.Kirby.x, self.Kirby.y, 100, 100)
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 27, 3217, 27, 27, self.Kirby.x, self.Kirby.y, 100, 100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(self.Kirby.frame * 27, 3217, 27, 27, 0, 'h', self.Kirby.x,
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 27, 3217, 27, 27, 0, 'h', self.Kirby.x,
                                                  self.Kirby.y, 100, 100)
 
 
-class Walk:
-    def __init__(self):
-        pass
-
-    def enter(self):
-        pass
-
-    def do(self):
-        pass
-
-    def exit(self):
-        pass
-    def draw(self):
-        pass
 
 
 class Kirby:
