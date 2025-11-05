@@ -24,6 +24,9 @@ def c_down(e):
 def c_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_c
 
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 10
 
 class Idle:
     def __init__(self, Kirby):
@@ -33,15 +36,16 @@ class Idle:
         self.Kirby.dir=0
 
     def do(self):
+        self.Kirby.frame = (self.Kirby.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * 0.5) % 10
         self.Kirby.frame =(self.Kirby.frame +1) % 10
 
     def exit(self,e):
         pass
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(self.Kirby.frame * 25, 3360, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 25, 3360, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(self.Kirby.frame * 25, 3360, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 25, 3360, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
 
 
 class Run:
@@ -99,8 +103,6 @@ class Jump:
             self.Kirby.image.clip_draw(self.Kirby.frame * 26, 3290, 26, 26, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(self.Kirby.frame * 26, 3290, 26, 26, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
-
-
 
 
 class Fly:
