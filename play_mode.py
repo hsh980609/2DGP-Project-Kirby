@@ -18,7 +18,7 @@ def handle_events():
         else:
             kirby.handle_event(event)
 
-def init_game():
+def init():
     global kirby
     global running
 
@@ -36,5 +36,5 @@ def draw():
     game_world.render()
     update_canvas()
 
-def finish_game():
+def finish():
     pass

@@ -1,46 +1,16 @@
 from pico2d import *
+import play_mode
 
-import game_world
-from kirby import Kirby
-
-
-
-
-def handle_events():
-    event_list = get_events()
-    for event in event_list:
-        if event.type == SDL_QUIT:
-            exit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            exit()
-        else:
-            kirby.handle_event(event)
-    pass
-
-
-def update_world():
-    game_world.update()
-
-
-def render_world():
-    clear_canvas()
-    game_world.render()
-    update_canvas()
-
-def reset_world():
-    global kirby
-
-    kirby = Kirby()
-    game_world.add_object(kirby, 1)
 
 
 open_canvas()
-reset_world()
+play_mode.init()
 
-while True:
-    handle_events()
-    update_world()
-    render_world()
-    delay(0.1)
+while play_mode.running:
+    play_mode.handle_events()
+    play_mode.update()
+    play_mode.draw()
+    delay(0.01)
 
+play_mode.finish()
 close_canvas()
