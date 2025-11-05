@@ -1,5 +1,5 @@
 from pico2d import *
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_x, SDLK_z
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_c, SDLK_x, SDLK_z
 
 from state_machine import StateMachine
 
@@ -19,6 +19,10 @@ def z_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_z
 def z_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_z
+def c_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_c
+def c_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_c
 
 
 class Idle:
@@ -108,7 +112,7 @@ class Fly:
 
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + 1) % 8
+        self.Kirby.frame = (self.Kirby.frame + 1) % 6
         self.Kirby.x += self.Kirby.dir * 15
 
     def exit(self, e):
@@ -116,9 +120,9 @@ class Fly:
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(5 + self.Kirby.frame * 24, 3245, 23, 23, self.Kirby.x, self.Kirby.y, 100, 100)
+            self.Kirby.image.clip_draw(self.Kirby.frame * 30, 3158, 30, 29, self.Kirby.x, self.Kirby.y, 100, 100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(5 + self.Kirby.frame * 24, 3245, 23, 23, 0, 'h', self.Kirby.x,
+            self.Kirby.image.clip_composite_draw(self.Kirby.frame * 25, 3158, 23, 25, 0, 'h', self.Kirby.x,
                                                  self.Kirby.y, 100, 100)
 
 
@@ -181,19 +185,19 @@ class Kirby:
         self.image = load_image('Kirby_sheet.png')
 
         self.IDLE = Idle(self)
-        # self.WALK = Walk(self)
         self.RUN = Run(self)
-        # self.FLY = Fly(self)
+        self.FLY = Fly(self)
         self.SUCTION = Suction(self)
         self.JUMP = Jump(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE :{z_down: self.SUCTION,x_down: self.JUMP, right_down: self.RUN, left_down: self.RUN,},
-                self.RUN :{right_up: self.IDLE, left_up: self.IDLE,},
-                self.JUMP:{},
-                self.SUCTION:{z_up:self.IDLE}
+                self.IDLE :{z_down: self.SUCTION,x_down: self.JUMP, right_up: self.RUN, right_down: self.RUN, left_up: self.RUN, left_down: self.RUN,},
+                self.RUN :{right_down: self.IDLE, right_up: self.IDLE,left_down: self.IDLE, left_up: self.IDLE,},
+                self.JUMP:{c_down:self.FLY},
+                self.SUCTION:{z_up:self.IDLE},
+                self.FLY:{c_up:self.IDLE}
 
              }
 
