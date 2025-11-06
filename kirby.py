@@ -1,3 +1,5 @@
+import time
+
 from pico2d import *
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_c, SDLK_x, SDLK_z
 
@@ -29,6 +31,7 @@ def c_up(e):
 TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 1초에 2번 액션 수행
 IDLE_FRAMES_PER_ACTION = 2
+WALK_FRAMES_PER_ACTION = 8
 RUN_FRAMES_PER_ACTION = 8
 JUMP_FRAMES_PER_ACTION = 10
 FLY_FRAMES_PER_ACTION = 5
@@ -38,13 +41,26 @@ class Idle:
     def __init__(self, Kirby):
         self.Kirby = Kirby
 
+        self.entry_time = 0
+        self.double_tap_time = 0.3
+        self.can_double_tap = False
+
     def enter(self, e):
         self.Kirby.dir=0
 
+        # 상태 진입할때 타이머 켜기
+        self.entry_time = time.time()
+        self.can_double_tap = True
+
     def do(self):
+        # 0.3초 지나면 더블탭flag 끄기
+        if self.can_double_tap and time.time() - self.entry_time > self.double_tap_time:
+            self.can_double_tap = False
+
         self.Kirby.frame = (self.Kirby.frame + IDLE_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
 
     def exit(self,e):
+        self.can_double_tap = False  # 상태끝날때 초기화
         pass
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
@@ -63,7 +79,8 @@ class Walk:
             self.Kirby.dir = self.Kirby.face_dir = -1
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + RUN_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+
+        self.Kirby.frame = (self.Kirby.frame + WALK_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.Kirby.x += self.Kirby.dir * 0.5
 
     def exit(self,e):
@@ -153,8 +170,7 @@ class Fly:
         if self.Kirby.face_dir == 1:  # right
             self.Kirby.image.clip_draw(int(self.Kirby.frame) * 30, 3158, 30, 29, self.Kirby.x, self.Kirby.y, 100, 100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 25, 3158, 23, 25, 0, 'h', self.Kirby.x,
-                                                 self.Kirby.y, 100, 100)
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 30, 3158, 30, 29, 0, 'h', self.Kirby.x,self.Kirby.y, 100, 100)
 
 class Suction:
     def __init__(self, Kirby):
@@ -181,8 +197,6 @@ class Suction:
                                                  self.Kirby.y, 100, 100)
 
 
-
-
 class Kirby:
     def __init__(self):
         self.x, self.y =400, 100
@@ -203,15 +217,14 @@ class Kirby:
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE :{z_down: self.SUCTION,x_down: self.JUMP, right_up: self.WALK, right_down: self.WALK, left_up: self.WALK, left_down: self.WALK,},
-                self.WALK :{right_down: self.IDLE, right_up: self.IDLE,left_down: self.IDLE, left_up: self.IDLE,},
-                self.RUN :{right_down: self.IDLE, right_up: self.IDLE,left_down: self.IDLE, left_up: self.IDLE,},
+                self.IDLE :{z_down: self.SUCTION,x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,right_up: self.WALK, left_up: self.WALK,},
+                self.WALK :{right_up: self.IDLE, left_up: self.IDLE,right_down: self.IDLE, left_down: self.IDLE,},
+                self.RUN :{right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE,},
                 self.JUMP:{c_down:self.FLY},
                 self.SUCTION:{z_up:self.IDLE},
                 self.FLY:{c_up:self.IDLE}
 
              }
-
         )
 
 
@@ -224,5 +237,9 @@ class Kirby:
         pass
 
     def handle_event(self, event):
+        if self.state_machine.cur_state == self.IDLE and self.IDLE.can_double_tap:
+            if right_down(('INPUT', event)) or left_down(('INPUT', event)):
+                self.state_machine.change_state(self.RUN, ('INPUT', event))
+                return
+
         self.state_machine.handle_state_event(('INPUT', event))
-        pass
