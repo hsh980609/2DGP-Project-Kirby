@@ -52,6 +52,28 @@ class Idle:
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 25, 3360, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
 
+class Walk:
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
+
+    def enter(self,e):
+        if right_down(e) or left_up(e):
+            self.Kirby.dir = self.Kirby.face_dir = 1
+        elif left_down(e) or right_up(e):
+            self.Kirby.dir = self.Kirby.face_dir = -1
+
+    def do(self):
+        self.Kirby.frame = (self.Kirby.frame + RUN_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        self.Kirby.x += self.Kirby.dir * 0.5
+
+    def exit(self,e):
+        pass
+
+    def draw(self):
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(4 + int(self.Kirby.frame) * 24, 3266, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_composite_draw(4 + int(self.Kirby.frame) * 24, 3266, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
 
 class Run:
     def __init__(self, Kirby):
@@ -172,6 +194,7 @@ class Kirby:
         self.image = load_image('Kirby_sheet.png')
 
         self.IDLE = Idle(self)
+        self.WALK = Walk(self)
         self.RUN = Run(self)
         self.FLY = Fly(self)
         self.SUCTION = Suction(self)
@@ -180,7 +203,8 @@ class Kirby:
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE :{z_down: self.SUCTION,x_down: self.JUMP, right_up: self.RUN, right_down: self.RUN, left_up: self.RUN, left_down: self.RUN,},
+                self.IDLE :{z_down: self.SUCTION,x_down: self.JUMP, right_up: self.WALK, right_down: self.WALK, left_up: self.WALK, left_down: self.WALK,},
+                self.WALK :{right_down: self.IDLE, right_up: self.IDLE,left_down: self.IDLE, left_up: self.IDLE,},
                 self.RUN :{right_down: self.IDLE, right_up: self.IDLE,left_down: self.IDLE, left_up: self.IDLE,},
                 self.JUMP:{c_down:self.FLY},
                 self.SUCTION:{z_up:self.IDLE},
