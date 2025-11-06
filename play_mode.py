@@ -3,6 +3,7 @@ from pico2d import *
 import game_world
 from kirby import Kirby
 from background import Background
+from stage import Stage
 
 kirby = None
 running = True
@@ -28,8 +29,11 @@ def init():
     background = Background()
     game_world.add_object(background, 0)
 
+    stage = Stage()
+    game_world.add_object(stage, 1)
+
     kirby = Kirby()
-    game_world.add_object(kirby, 1)
+    game_world.add_object(kirby, 2)
 
 def update():
     game_world.update()
