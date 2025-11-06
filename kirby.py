@@ -28,6 +28,14 @@ def c_down(e):
 def c_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_c
 
+# Kirby Run Speed
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+
 TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 1초에 2번 액션 수행
 IDLE_FRAMES_PER_ACTION = 2
@@ -104,16 +112,16 @@ class Run:
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + RUN_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        self.Kirby.x += self.Kirby.dir * 1
+        self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * game_framework.frame_time
 
     def exit(self,e):
         pass
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(5 + int(self.Kirby.frame) * 24, 3245, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(5 + int(self.Kirby.frame) * 24, 3241, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(5 + int(self.Kirby.frame) * 24, 3245, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(5 + int(self.Kirby.frame) * 24, 3241, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
 
 class Jump:
     def __init__(self, Kirby):
