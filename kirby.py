@@ -28,7 +28,7 @@ def c_up(e):
 
 TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 1초에 2번 액션 수행
-IDLE_FRAMES_PER_ACTION = 10
+IDLE_FRAMES_PER_ACTION = 2
 RUN_FRAMES_PER_ACTION = 8
 JUMP_FRAMES_PER_ACTION = 10
 FLY_FRAMES_PER_ACTION = 5
@@ -42,7 +42,7 @@ class Idle:
         self.Kirby.dir=0
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + IDLE_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
+        self.Kirby.frame = (self.Kirby.frame + IDLE_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
 
     def exit(self,e):
         pass
@@ -159,7 +159,7 @@ class Suction:
 
 class Kirby:
     def __init__(self):
-        self.x, self.y =400, 90
+        self.x, self.y =400, 100
         self.y_start = 0
 
         self.frame = 0
