@@ -30,10 +30,17 @@ def c_up(e):
 
 # Kirby Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_KMPH = 40.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+# Kirby Walk Speed
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+WALK_SPEED_KMPH = 20.0  # Km / Hour
+WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
+WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
+WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
 
 TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
@@ -50,7 +57,7 @@ class Idle:
         self.Kirby = Kirby
 
         self.entry_time = 0
-        self.double_tap_time = 0.3
+        self.double_tap_time = 0.1
         self.can_double_tap = False
 
     def enter(self, e):
@@ -89,7 +96,7 @@ class Walk:
     def do(self):
 
         self.Kirby.frame = (self.Kirby.frame + WALK_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        self.Kirby.x += self.Kirby.dir * 0.5
+        self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
 
     def exit(self,e):
         pass
