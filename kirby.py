@@ -79,23 +79,27 @@ class Run:
 class Jump:
     def __init__(self, Kirby):
         self.Kirby = Kirby
-        self.jump_height = 10
-        self.gravity = 1
+        self.jump_velocity = 500 # 초당 500픽셀 점프
+        self.gravity = 1000 # 초당 1000픽셀씩 속도 감소
 
     def enter(self,e):
         self.Kirby.dir = 0
         self.Kirby.frame = 0
-        self.Kirby.y_start = self.jump_height
+        self.Kirby.y_velocity = self.jump_velocity
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + JUMP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
-        self.Kirby.y += self.Kirby.y_start
-        self.Kirby.y_start -=self.gravity
+        self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
+        self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
+
+        if self.Kirby.y_velocity > 0:
+            self.Kirby.frame = 0
+        else:
+            self.Kirby.frame = ( self.Kirby.frame + JUMP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
 
         # 땅에 닿았는지 확인
         if self.Kirby.y <=90:
             self.Kirby.y = 90
-            self.Kirby.y_start = 0
+            self.Kirby.y_velocity = 0
 
             self.Kirby.state_machine.change_state(self.Kirby.IDLE)
 
