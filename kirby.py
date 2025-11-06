@@ -84,9 +84,6 @@ class Idle:
         self.double_tap_time = 0.1
         self.can_double_tap = False
 
-        # sleep 타이머 변수
-        self.Kirby.wait_time = get_time()
-
     def enter(self, e):
         self.Kirby.dir=0
 
@@ -94,12 +91,16 @@ class Idle:
         self.entry_time = time.time()
         self.can_double_tap = True
 
+        # sleep 타이머 변수
+        self.Kirby.wait_time = get_time()
+
     def do(self):
         # 0.3초 지나면 더블탭flag 끄기
         if self.can_double_tap and time.time() - self.entry_time > self.double_tap_time:
             self.can_double_tap = False
 
         self.Kirby.frame = (self.Kirby.frame + IDLE_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
+
         if get_time() - self.Kirby.wait_time > 3:
             self.Kirby.state_machine.handle_state_event(('TIMEOUT', None))
 
