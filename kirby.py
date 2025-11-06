@@ -27,6 +27,10 @@ def c_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_c
 def c_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_c
+def space_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+time_out = lambda e: e[0] == 'TIMEOUT'
 
 # Kirby Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -45,6 +49,7 @@ WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
 TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 1초에 2번 액션 수행
+SLEEP_FRAMES_PER_ACTION = 3
 IDLE_FRAMES_PER_ACTION = 2
 WALK_FRAMES_PER_ACTION = 8
 RUN_FRAMES_PER_ACTION = 8
@@ -60,23 +65,27 @@ class Sleep:
         pass
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + IDLE_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
+        self.Kirby.frame = (self.Kirby.frame + SLEEP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
 
     def exit(self,e):
         pass
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 25, 3385, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(140 + int(self.Kirby.frame) * 25, 922, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 25, 3385, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(140 + int(self.Kirby.frame) * 25, 922, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
 
 class Idle:
     def __init__(self, Kirby):
         self.Kirby = Kirby
 
+        # 더블탭 위한 변수
         self.entry_time = 0
         self.double_tap_time = 0.1
         self.can_double_tap = False
+
+        # sleep 타이머 변수
+        self.Kirby.wait_time = get_time()
 
     def enter(self, e):
         self.Kirby.dir=0
@@ -91,6 +100,8 @@ class Idle:
             self.can_double_tap = False
 
         self.Kirby.frame = (self.Kirby.frame + IDLE_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
+        if get_time() - self.Kirby.wait_time > 3:
+            self.Kirby.state_machine.handle_state_event(('TIMEOUT', None))
 
     def exit(self,e):
         self.can_double_tap = False  # 상태끝날때 초기화
@@ -241,6 +252,7 @@ class Kirby:
         self.image = load_image('Kirby_sheet.png')
 
         self.IDLE = Idle(self)
+        self.SLEEP = Sleep(self)
         self.WALK = Walk(self)
         self.RUN = Run(self)
         self.FLY = Fly(self)
@@ -250,7 +262,8 @@ class Kirby:
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE :{z_down: self.SUCTION,x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,right_up: self.WALK, left_up: self.WALK,},
+                self.SLEEP : {space_down: self.IDLE},
+                self.IDLE :{time_out: self.SLEEP,z_down: self.SUCTION,x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,right_up: self.WALK, left_up: self.WALK,},
                 self.WALK :{right_up: self.IDLE, left_up: self.IDLE,right_down: self.IDLE, left_down: self.IDLE,},
                 self.RUN :{right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE,},
                 self.JUMP:{c_down:self.FLY},
