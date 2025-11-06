@@ -1,5 +1,4 @@
 import time
-
 from pico2d import *
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_c, SDLK_x, SDLK_z
 
