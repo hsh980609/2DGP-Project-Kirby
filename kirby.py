@@ -1,6 +1,6 @@
 import time
 from pico2d import *
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_c, SDLK_x, SDLK_z
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_DOWN, SDLK_UP, SDLK_c, SDLK_x, SDLK_z
 
 import game_framework
 
@@ -247,6 +247,7 @@ class Fly:
         self.Kirby.frame = (self.Kirby.frame + FLY_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
 
         self.Kirby.x += self.Kirby.dir * FLY_SPEED_PPS * game_framework.frame_time
+        self.Kirby.y += self.Kirby.dir_y * FLY_SPEED_PPS * game_framework.frame_time
 
     def exit(self, e):
         self.Kirby.dir = 0
@@ -292,6 +293,7 @@ class Kirby:
         self.frame = 0
         self.face_dir = 1
         self.dir = 0
+        self.dir_y = 0 # 위 1 아래 -1
         self.image = load_image('Kirby_sheet.png')
 
         self.IDLE = Idle(self)
@@ -346,6 +348,15 @@ class Kirby:
                 self.dir = 0
             elif left_up(e) and self.dir == -1:
                 self.dir = 0
+
+            if up_down(e):
+                self.dir_y = 1
+            elif down_down(e):
+                self.dir_y = -1
+            elif up_up(e) and self.dir_y == 1:
+                self.dir_y = 0
+            elif down_up(e) and self.dir_y == -1:
+                self.dir_y = 0
 
             if not c_up(e):
                 return
