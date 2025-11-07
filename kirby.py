@@ -100,7 +100,7 @@ class Idle:
 
         self.Kirby.frame = (self.Kirby.frame + IDLE_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
 
-        if get_time() - self.Kirby.wait_time > 3:
+        if get_time() - self.Kirby.wait_time > 5:
             self.Kirby.state_machine.handle_state_event(('TIMEOUT', None))
 
     def exit(self,e):
@@ -158,6 +158,22 @@ class Run:
             self.Kirby.image.clip_draw(5 + int(self.Kirby.frame) * 24, 3241, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(5 + int(self.Kirby.frame) * 24, 3241, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
+
+class Run_Stop:
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
+
+    def enter(self,e):
+        pass
+
+    def do(self):
+        pass
+
+    def exit(self,e):
+        pass
+
+    def draw(self):
+        pass
 
 class Jump:
     def __init__(self, Kirby):
