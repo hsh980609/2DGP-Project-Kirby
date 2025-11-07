@@ -52,6 +52,7 @@ SLEEP_FRAMES_PER_ACTION = 3
 IDLE_FRAMES_PER_ACTION = 2
 WALK_FRAMES_PER_ACTION = 8
 RUN_FRAMES_PER_ACTION = 8
+RUN_STOP_FRAMES_PER_ACTION = 1
 JUMP_FRAMES_PER_ACTION = 10
 FLY_FRAMES_PER_ACTION = 5
 SUCTION_FRAMES_PER_ACTION = 5
@@ -164,16 +165,26 @@ class Run_Stop:
         self.Kirby = Kirby
 
     def enter(self,e):
-        pass
+        self.Kirby.frame = 0
 
     def do(self):
-        pass
+        self.Kirby.frame = (self.Kirby.frame + RUN_STOP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
+        self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * 0.2 * game_framework.frame_time
+
+        if self.Kirby.frame >= 1:
+            self.Kirby.frame = 1
+
+            self.Kirby.state_machine.handle_state_event(('TIMEOUT', None))
 
     def exit(self,e):
         pass
 
     def draw(self):
-        pass
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(200 + int(self.Kirby.frame) * 23, 3241, 23, 24, self.Kirby.x, self.Kirby.y,100,100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_composite_draw(200 + int(self.Kirby.frame) * 23, 3241, 23, 24, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
+
 
 class Jump:
     def __init__(self, Kirby):
@@ -271,6 +282,7 @@ class Kirby:
         self.SLEEP = Sleep(self)
         self.WALK = Walk(self)
         self.RUN = Run(self)
+        self.RUN_STOP = Run_Stop(self)
         self.FLY = Fly(self)
         self.SUCTION = Suction(self)
         self.JUMP = Jump(self)
@@ -281,7 +293,8 @@ class Kirby:
                 self.SLEEP : {space_down: self.IDLE},
                 self.IDLE :{time_out: self.SLEEP,z_down: self.SUCTION,x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,right_up: self.WALK, left_up: self.WALK,},
                 self.WALK :{right_up: self.IDLE, left_up: self.IDLE,right_down: self.IDLE, left_down: self.IDLE,},
-                self.RUN :{right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE,},
+                self.RUN :{right_up: self.RUN_STOP, left_up: self.RUN_STOP, right_down: self.RUN_STOP, left_down: self.RUN_STOP,},
+                self.RUN_STOP :{time_out:self.IDLE},
                 self.JUMP:{c_down:self.FLY},
                 self.SUCTION:{z_up:self.IDLE},
                 self.FLY:{c_up:self.IDLE}
