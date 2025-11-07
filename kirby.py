@@ -54,7 +54,7 @@ WALK_FRAMES_PER_ACTION = 8
 RUN_FRAMES_PER_ACTION = 8
 RUN_STOP_FRAMES_PER_ACTION = 1
 JUMP_FRAMES_PER_ACTION = 10
-FLY_FRAMES_PER_ACTION = 5
+FLY_FRAMES_PER_ACTION = 6
 SUCTION_FRAMES_PER_ACTION = 5
 
 class Sleep:
@@ -185,7 +185,6 @@ class Run_Stop:
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(200 + int(self.Kirby.frame) * 23, 3241, 23, 24, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
 
-
 class Jump:
     def __init__(self, Kirby):
         self.Kirby = Kirby
@@ -232,7 +231,7 @@ class Fly:
 
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + FLY_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 5
+        self.Kirby.frame = (self.Kirby.frame + FLY_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
 
     def exit(self, e):
         pass
