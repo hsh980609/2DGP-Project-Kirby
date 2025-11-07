@@ -31,15 +31,20 @@ def space_down(e):
 
 time_out = lambda e: e[0] == 'TIMEOUT'
 
-# Kirby Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+# Kirby Run Speed
 RUN_SPEED_KMPH = 40.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
+# Kirby Fly Speed
+FLY_SPEED_KMPH = 20.0  # Km / Hour
+FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
+FLY_SPEED_MPS = (FLY_SPEED_MPM / 60.0)
+FLY_SPEED_PPS = (FLY_SPEED_MPS * PIXEL_PER_METER)
+
 # Kirby Walk Speed
-PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 WALK_SPEED_KMPH = 20.0  # Km / Hour
 WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
@@ -233,7 +238,10 @@ class Fly:
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + FLY_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
 
+        self.Kirby.x += self.Kirby.dir * FLY_SPEED_PPS * game_framework.frame_time
+
     def exit(self, e):
+        self.Kirby.dir = 0
         pass
 
     def draw(self):
@@ -311,9 +319,26 @@ class Kirby:
         pass
 
     def handle_event(self, event):
+        e = ('INPUT', event)
         if self.state_machine.cur_state == self.IDLE and self.IDLE.can_double_tap:
-            if right_down(('INPUT', event)) or left_down(('INPUT', event)):
-                self.state_machine.change_state(self.RUN, ('INPUT', event))
+            if right_down(e) or left_down(e):
+                self.state_machine.change_state(self.RUN, (e))
                 return
 
-        self.state_machine.handle_state_event(('INPUT', event))
+        if self.state_machine.cur_state == self.FLY:
+            if right_down(e):
+                self.dir = 1
+                self.face_dir = 1
+            elif left_down(e):
+                self.dir = -1
+                self.face_dir = -1
+            # 키를 떼도 C키를 누르고 있다면 멈추기만 함
+            elif right_up(e) and self.dir == 1:
+                self.dir = 0
+            elif left_up(e) and self.dir == -1:
+                self.dir = 0
+
+            if not c_up(e):
+                return
+
+        self.state_machine.handle_state_event(e)
