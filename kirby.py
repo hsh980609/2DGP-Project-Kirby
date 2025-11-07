@@ -211,8 +211,8 @@ class Jump:
             self.Kirby.frame = ( self.Kirby.frame + JUMP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
 
         # 땅에 닿았는지 확인
-        if self.Kirby.y <=90:
-            self.Kirby.y = 90
+        if self.Kirby.y <=100:
+            self.Kirby.y = 100
             self.Kirby.y_velocity = 0
 
             self.Kirby.state_machine.change_state(self.Kirby.IDLE)
@@ -242,6 +242,7 @@ class Fly:
 
     def exit(self, e):
         self.Kirby.dir = 0
+        self.Kirby.y = 100
         pass
 
     def draw(self):
