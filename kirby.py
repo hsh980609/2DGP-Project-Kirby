@@ -306,7 +306,6 @@ class Suction:
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 27, 3213, 25, 27, 0, 'h', self.Kirby.x,
                                                  self.Kirby.y, 100, 100)
 
-
 class Kirby:
     def __init__(self):
         self.x, self.y =400, 100
