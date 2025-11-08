@@ -240,8 +240,11 @@ class Jump:
             # self.Kirby.state_machine.change_state(self.Kirby.IDLE)
             if self.Kirby.dir == 0:
                 self.Kirby.state_machine.change_state(self.Kirby.IDLE)
-            else:
-                self.Kirby.state_machine.change_state(self.Kirby.WALK)
+            elif self.Kirby.dir == 1 or self.Kirby.dir == -1:
+                if self.Kirby.last_state == 0: # walk
+                    self.Kirby.state_machine.change_state(self.Kirby.WALK)
+                elif self.Kirby.last_state == 1: # run
+                    self.Kirby.state_machine.change_state(self.Kirby.RUN)
 
 
     def exit(self,e):
