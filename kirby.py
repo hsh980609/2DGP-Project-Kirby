@@ -312,9 +312,9 @@ class Kirby:
             self.IDLE,
             {
                 self.SLEEP : {space_down: self.IDLE},
-                self.IDLE :{time_out: self.SLEEP,z_down: self.SUCTION,x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,right_up: self.WALK, left_up: self.WALK,},
-                self.WALK :{right_up: self.IDLE, left_up: self.IDLE,right_down: self.IDLE, left_down: self.IDLE,},
-                self.RUN :{right_up: self.RUN_STOP, left_up: self.RUN_STOP, right_down: self.RUN_STOP, left_down: self.RUN_STOP,},
+                self.IDLE :{time_out: self.SLEEP,z_down: self.SUCTION, x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,right_up: self.WALK, left_up: self.WALK,},
+                self.WALK :{x_down: self.JUMP,right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE,},
+                self.RUN :{x_down: self.JUMP,right_up: self.RUN_STOP, left_up: self.RUN_STOP, right_down: self.RUN_STOP, left_down: self.RUN_STOP,},
                 self.RUN_STOP :{time_out:self.IDLE},
                 self.JUMP:{c_down:self.FLY},
                 self.SUCTION:{z_up:self.IDLE},
