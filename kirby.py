@@ -182,7 +182,7 @@ class Run_Stop:
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + RUN_STOP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
-        self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * 0.2 * game_framework.frame_time
+        self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * 0.1 * game_framework.frame_time
 
         if self.Kirby.frame >= 1:
             self.Kirby.frame = 1
@@ -312,13 +312,13 @@ class Kirby:
             self.IDLE,
             {
                 self.SLEEP : {space_down: self.IDLE},
-                self.IDLE :{time_out: self.SLEEP,z_down: self.SUCTION, x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,right_up: self.WALK, left_up: self.WALK,},
-                self.WALK :{x_down: self.JUMP,right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE,},
-                self.RUN :{x_down: self.JUMP,right_up: self.RUN_STOP, left_up: self.RUN_STOP, right_down: self.RUN_STOP, left_down: self.RUN_STOP,},
-                self.RUN_STOP :{time_out:self.IDLE},
-                self.JUMP:{c_down:self.FLY},
-                self.SUCTION:{z_up:self.IDLE},
-                self.FLY:{c_up:self.IDLE}
+                self.IDLE :{time_out: self.SLEEP, z_down: self.SUCTION, x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,},
+                self.WALK :{x_down: self.JUMP, right_up: self.IDLE, left_up: self.IDLE,},
+                self.RUN :{x_down: self.JUMP, right_up: self.RUN_STOP, left_up: self.RUN_STOP,},
+                self.RUN_STOP :{time_out: self.IDLE},
+                self.JUMP:{c_down: self.FLY},
+                self.SUCTION:{z_up: self.IDLE},
+                self.FLY:{c_up: self.IDLE}
 
              }
         )
