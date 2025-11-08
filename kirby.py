@@ -213,6 +213,8 @@ class Jump:
         self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
         self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
 
+        self.Kirby.x +=self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
+
         if self.Kirby.y_velocity > 0:
             self.Kirby.frame = 0
         else:
@@ -228,6 +230,7 @@ class Jump:
 
     def exit(self,e):
         self.Kirby.y_start = 0
+        self.Kirby.dir = 0
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
@@ -331,12 +334,31 @@ class Kirby:
 
     def handle_event(self, event):
         e = ('INPUT', event)
+        # 더블탭 Run 처리
         if self.state_machine.cur_state == self.IDLE and self.IDLE.can_double_tap:
             if right_down(e) or left_down(e):
                 self.state_machine.change_state(self.RUN, (e))
                 return
 
-        if self.state_machine.cur_state == self.FLY:
+        # Jump와 Fly에서의 방향키 처리
+        elif self.state_machine.cur_state == self.JUMP:
+            if right_down(e):
+                self.dir = 1
+                self.face_dir = 1
+            elif left_down(e):
+                self.dir = -1
+                self.face_dir = -1
+            # 키 떼면 공중에서 멈춤
+            elif right_up(e) and self.dir == 1:
+                self.dir = 0
+            elif left_up(e) and self.dir == -1:
+                self.dir = 0
+
+            # fly로 가는 c_down 아니면 이벤트 안넘기고 종료
+            if not c_down(e):
+                return
+
+        elif self.state_machine.cur_state == self.FLY:
             if right_down(e):
                 self.dir = 1
                 self.face_dir = 1
@@ -360,5 +382,6 @@ class Kirby:
 
             if not c_up(e):
                 return
+
 
         self.state_machine.handle_state_event(e)
