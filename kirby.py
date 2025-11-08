@@ -205,7 +205,7 @@ class Jump:
         self.gravity = 1000 # 초당 1000픽셀씩 속도 감소
 
     def enter(self,e):
-        self.Kirby.dir = 0
+        # self.Kirby.dir = 0
         self.Kirby.frame = 0
         self.Kirby.y_velocity = self.jump_velocity
 
