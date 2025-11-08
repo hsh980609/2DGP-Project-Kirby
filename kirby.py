@@ -144,6 +144,7 @@ class Walk:
         self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
 
     def exit(self,e):
+        self.Kirby.last_state = 0 # walk
         pass
 
     def draw(self):
@@ -169,6 +170,7 @@ class Run:
         self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * game_framework.frame_time
 
     def exit(self,e):
+        self.Kirby.last_state = 1 # run
         pass
 
     def draw(self):
@@ -214,10 +216,16 @@ class Jump:
         self.Kirby.y_velocity = self.jump_velocity
 
     def do(self):
-        self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
-        self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
+        if self.Kirby.last_state == 0: # walk
+            self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
+            self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
+            self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
 
-        self.Kirby.x +=self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
+        elif self.Kirby.last_state == 1: # run
+            self.Kirby.y += self.Kirby.y_velocity * 1.3 * game_framework.frame_time
+            self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
+            self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * game_framework.frame_time
+
 
         if self.Kirby.y_velocity > 0:
             self.Kirby.frame = 0
@@ -307,6 +315,8 @@ class Kirby:
         self.dir_y = 0 # 위 1 아래 -1
         self.image = load_image('Kirby_sheet.png')
 
+        self.last_state = 0 # 0이면 walk, 1이면 run
+
         self.IDLE = Idle(self)
         self.SLEEP = Sleep(self)
         self.WALK = Walk(self)
@@ -346,6 +356,14 @@ class Kirby:
         if self.state_machine.cur_state == self.IDLE and self.IDLE.can_double_tap:
             if right_down(e) or left_down(e):
                 self.state_machine.change_state(self.RUN, (e))
+                return
+
+        elif self.state_machine.cur_state == self.WALK or self.state_machine.cur_state == self.RUN:
+            if left_down(e) and self.dir == 1:
+                self.state_machine.change_state(self.WALK, e)  # 즉시 왼쪽 WALK로
+                return
+            elif right_down(e) and self.dir == -1:
+                self.state_machine.change_state(self.WALK, e)  # 즉시 오른쪽 WALK로
                 return
 
         # Jump와 Fly에서의 방향키 처리
