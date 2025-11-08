@@ -225,12 +225,16 @@ class Jump:
             self.Kirby.y = 100
             self.Kirby.y_velocity = 0
 
-            self.Kirby.state_machine.change_state(self.Kirby.IDLE)
+            # self.Kirby.state_machine.change_state(self.Kirby.IDLE)
+            if self.Kirby.dir == 0:
+                self.Kirby.state_machine.change_state(self.Kirby.IDLE)
+            else:
+                self.Kirby.state_machine.change_state(self.Kirby.WALK)
 
 
     def exit(self,e):
         self.Kirby.y_start = 0
-        self.Kirby.dir = 0
+        # self.Kirby.dir = 0
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
