@@ -131,10 +131,12 @@ class Walk:
         self.Kirby = Kirby
 
     def enter(self,e):
-        if right_down(e) or left_up(e):
-            self.Kirby.dir = self.Kirby.face_dir = 1
-        elif left_down(e) or right_up(e):
-            self.Kirby.dir = self.Kirby.face_dir = -1
+        if e:
+            if right_down(e):
+                self.Kirby.dir = self.Kirby.face_dir = 1
+            elif left_down(e):
+                self.Kirby.dir = self.Kirby.face_dir = -1
+        # e가 없으면 Jump에서 쓰던 dir 유지
 
     def do(self):
 
@@ -155,10 +157,12 @@ class Run:
         self.Kirby = Kirby
 
     def enter(self,e):
-        if right_down(e) or left_up(e):
-            self.Kirby.dir = self.Kirby.face_dir = 1
-        elif left_down(e) or right_up(e):
-            self.Kirby.dir = self.Kirby.face_dir = -1
+        if e:
+            if right_down(e):
+                self.Kirby.dir = self.Kirby.face_dir = 1
+            elif left_down(e):
+                self.Kirby.dir = self.Kirby.face_dir = -1
+        # e가 없으면 Jump에서 쓰던 dir 유지
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + RUN_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
