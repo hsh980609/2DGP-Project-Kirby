@@ -279,9 +279,9 @@ class Suction:
 
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 27, 3217, 27, 27, self.Kirby.x, self.Kirby.y, 100, 100)
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 27, 3213, 25, 27, self.Kirby.x, self.Kirby.y, 100, 100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 27, 3217, 27, 27, 0, 'h', self.Kirby.x,
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 27, 3213, 25, 27, 0, 'h', self.Kirby.x,
                                                  self.Kirby.y, 100, 100)
 
 
