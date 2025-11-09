@@ -70,6 +70,9 @@ JUMP_FRAMES_PER_ACTION = 10
 FLY_FRAMES_PER_ACTION = 6
 SUCTION_FRAMES_PER_ACTION = 5
 
+MAP_CEILING_Y = 600.0 # 맵 천장
+MAP_FLOOR_Y = 100.0 # 맵 바닥.
+
 class Sleep:
     def __init__(self, Kirby):
         self.Kirby = Kirby
@@ -118,8 +121,10 @@ class Idle:
             self.Kirby.state_machine.handle_state_event(('TIMEOUT', None))
 
     def exit(self,e):
-        self.can_double_tap = False  # 상태끝날때 초기화
-        pass
+        self.can_double_tap = False # 상태끝날때 초기화
+        self.Kirby.last_state = 0
+
+
     def draw(self):
         if self.Kirby.face_dir == 1:  # right
             self.Kirby.image.clip_draw(int(self.Kirby.frame) * 25, 3360, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
@@ -211,21 +216,19 @@ class Jump:
         self.gravity = 1000 # 초당 1000픽셀씩 속도 감소
 
     def enter(self,e):
-        # self.Kirby.dir = 0
         self.Kirby.frame = 0
         self.Kirby.y_velocity = self.jump_velocity
 
     def do(self):
-        if self.Kirby.last_state == 0: # walk
+        if self.Kirby.last_state == 0:  # walk
             self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
             self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
             self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
 
-        elif self.Kirby.last_state == 1: # run
+        elif self.Kirby.last_state == 1:  # run
             self.Kirby.y += self.Kirby.y_velocity * 1.3 * game_framework.frame_time
             self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
             self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * game_framework.frame_time
-
 
         if self.Kirby.y_velocity > 0:
             self.Kirby.frame = 0
@@ -233,11 +236,10 @@ class Jump:
             self.Kirby.frame = ( self.Kirby.frame + JUMP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
 
         # 땅에 닿았는지 확인
-        if self.Kirby.y <=100:
-            self.Kirby.y = 100
+        if self.Kirby.y <= MAP_FLOOR_Y:
+            self.Kirby.y = MAP_FLOOR_Y
             self.Kirby.y_velocity = 0
 
-            # self.Kirby.state_machine.change_state(self.Kirby.IDLE)
             if self.Kirby.dir == 0:
                 self.Kirby.state_machine.change_state(self.Kirby.IDLE)
             elif self.Kirby.dir == 1 or self.Kirby.dir == -1:
@@ -264,12 +266,22 @@ class Fly:
     def enter(self, e):
         pass
 
-
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + FLY_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
 
         self.Kirby.x += self.Kirby.dir * FLY_SPEED_PPS * game_framework.frame_time
         self.Kirby.y += self.Kirby.dir_y * FLY_SPEED_PPS * game_framework.frame_time
+
+        (kirby_left, kirby_bottom, kirby_right, kirby_top) = self.Kirby.get_bb()
+        # 맵 최대 높이 충돌처리
+        if kirby_top >= MAP_CEILING_Y:
+            self.Kirby.y = MAP_CEILING_Y - 40
+            self.Kirby.y_velocity = 0  # 상승 중이었다면 속도를 0으로
+
+        # 땅에 닿았는지 확인
+        if self.Kirby.y <= MAP_FLOOR_Y:
+            self.Kirby.y = MAP_FLOOR_Y
+            self.Kirby.y_velocity = 0
 
     def exit(self, e):
         self.Kirby.dir = 0
@@ -354,7 +366,7 @@ class Kirby:
         pass
 
     def get_bb(self):
-        return self.x -35, self.y - 40, self.x + 40, self.y + 40
+        return self.x -35, self.y - 30, self.x + 40, self.y + 40
 
     def handle_event(self, event):
         e = ('INPUT', event)
