@@ -350,7 +350,11 @@ class Kirby:
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
         pass
+
+    def get_bb(self):
+        return self.x -35, self.y - 40, self.x + 40, self.y + 40
 
     def handle_event(self, event):
         e = ('INPUT', event)
@@ -410,6 +414,5 @@ class Kirby:
 
             if not c_up(e):
                 return
-
 
         self.state_machine.handle_state_event(e)
