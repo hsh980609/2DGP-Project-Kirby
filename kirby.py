@@ -355,7 +355,6 @@ class Kirby:
              }
         )
 
-
     def update(self):
         self.state_machine.update()
         pass
