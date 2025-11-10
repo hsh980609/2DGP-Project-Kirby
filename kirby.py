@@ -218,6 +218,8 @@ class Jump:
     def enter(self,e):
         self.Kirby.frame = 0
         self.Kirby.y_velocity = self.jump_velocity
+        if self.Kirby.last_state == 3:
+            self.Kirby.y_velocity = 0
 
     def do(self):
         if self.Kirby.last_state == 0:  # walk
@@ -229,6 +231,11 @@ class Jump:
             self.Kirby.y += self.Kirby.y_velocity * 1.3 * game_framework.frame_time
             self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
             self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * game_framework.frame_time
+
+        elif self.Kirby.last_state == 3:  # fly
+            self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
+            self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
+            self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
 
         if self.Kirby.y_velocity > 0:
             self.Kirby.frame = 0
@@ -285,7 +292,7 @@ class Fly:
 
     def exit(self, e):
         self.Kirby.dir = 0
-        self.Kirby.y = 100
+        self.Kirby.last_state = 3
         pass
 
     def draw(self):
@@ -329,7 +336,7 @@ class Kirby:
         self.dir_y = 0 # 위 1 아래 -1
         self.image = load_image('Kirby_sheet.png')
 
-        self.last_state = 0 # 0이면 walk, 1이면 run
+        self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
 
         self.IDLE = Idle(self)
         self.SLEEP = Sleep(self)
@@ -350,7 +357,7 @@ class Kirby:
                 self.RUN_STOP :{time_out: self.IDLE},
                 self.JUMP:{c_down: self.FLY},
                 self.SUCTION:{z_up: self.IDLE},
-                self.FLY:{c_up: self.IDLE}
+                self.FLY:{c_up: self.JUMP}
 
              }
         )
