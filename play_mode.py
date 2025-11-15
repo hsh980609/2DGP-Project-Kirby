@@ -4,7 +4,7 @@ import game_world
 from kirby import Kirby
 from background import Background
 from stage import Stage
-from Star import Star
+from Monster import Monster
 
 kirby = None
 running = True
@@ -35,6 +35,10 @@ def init():
 
     kirby = Kirby()
     game_world.add_object(kirby, 2)
+
+    monster = Monster()
+    game_world.add_object(monster, 2)
+
 
 def update():
     game_world.update()

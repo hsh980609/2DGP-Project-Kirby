@@ -9,14 +9,14 @@ class Monster:
         if Monster.image == None:
             Monster.image = load_image('Monster.png')
 
-        self.x, self.y = 800, 90
+        self.x, self.y = 500, 100
         pass
 
     def update(self):
         pass
 
     def draw(self):
-        # Placeholder for drawing the monster
+        self.image.clip_draw(110, 120, 30, 30, self.x, self.y, 100, 100)
         pass
 
     def get_bb(self):
