@@ -61,10 +61,18 @@ class Monster:
         frame_data = self.MONSTER_ANIMATION[frame_index]
         M_left = frame_data
 
-        if self.dir == 1:
-            self.image.clip_draw(M_left,120,30,30, self.x, self.y, 100, 100)
+        if self.knockback_timer > 0:
+            if int(self.knockback_timer * 10) % 2 == 1:
+                if self.dir == 1:
+                    self.image.clip_draw(M_left, 120, 30, 30, self.x, self.y, 100, 100)
+                else:
+                    self.image.clip_composite_draw(M_left, 120, 30, 30, 0, 'h', self.x, self.y, 100, 100)
         else:
-            self.image.clip_composite_draw(M_left, 120,30,30, 0, 'h', self.x, self.y, 100, 100)
+            if self.dir == 1:
+                self.image.clip_draw(M_left, 120, 30, 30, self.x, self.y, 100, 100)
+            else:
+                self.image.clip_composite_draw(M_left, 120, 30, 30, 0, 'h', self.x, self.y, 100, 100)
+
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):

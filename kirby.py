@@ -379,7 +379,12 @@ class Kirby:
         self.state_machine.update()
 
     def draw(self):
-        self.state_machine.draw()
+        if self.knockback_timer > 0:
+            # 홀수 일때만 출력하여 깜빡거리는 모션 연출
+            if int(self.knockback_timer * 10) % 2 == 1:
+                self.state_machine.draw()
+        else:
+            self.state_machine.draw()
 
         draw_rectangle(*self.get_bb())
 
@@ -396,7 +401,7 @@ class Kirby:
         if group == 'kirby:monster':
             print("Kirby Hit Monster!")
 
-            self.knockback_timer = 0.3
+            self.knockback_timer = 0.5
             if self.x < other.x:
                 self.dir = -1
             else:
