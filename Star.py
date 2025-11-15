@@ -3,7 +3,7 @@ from pico2d import *
 class Star:
     image = None
 
-    def __init__(self, x,y):
+    def __init__(self, x =400,y=300):
         if Star.image == None:
             Star.image = load_image('Star.png')
         self.x, self.y = x, y

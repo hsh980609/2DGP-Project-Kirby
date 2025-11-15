@@ -315,6 +315,7 @@ class Suction:
             self.Kirby.frame = 4
 
     def exit(self, e):
+        self.Kirby.fire_star()
         pass
 
     def draw(self):
@@ -368,6 +369,9 @@ class Kirby:
     def draw(self):
         self.state_machine.draw()
         draw_rectangle(*self.get_bb())
+        pass
+
+    def fire_star(self):
         pass
 
     def get_bb(self):
