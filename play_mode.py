@@ -24,7 +24,6 @@ def handle_events():
 def init():
     global kirby
     global running
-    global star
 
     running = True
 
@@ -36,9 +35,6 @@ def init():
 
     kirby = Kirby()
     game_world.add_object(kirby, 2)
-
-    star = Star()
-    game_world.add_object(star, 2)
 
 def update():
     game_world.update()

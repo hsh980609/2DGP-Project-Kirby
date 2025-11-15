@@ -4,6 +4,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK
 
 import game_framework
 from state_machine import StateMachine
+from Star import Star
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
@@ -372,6 +373,8 @@ class Kirby:
         pass
 
     def fire_star(self):
+        print("Fire Star!")
+        star = Star(self.x, self.y,self.face_dir)
         pass
 
     def get_bb(self):
