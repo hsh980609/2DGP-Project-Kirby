@@ -60,7 +60,7 @@ WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
 # 충돌시 넉백 속도
-KNOCKBACK_SPEED_KMPH = 30.0  # 넉백 속도
+KNOCKBACK_SPEED_KMPH = 10.0  # 넉백 속도
 KNOCKBACK_SPEED_MPM = (KNOCKBACK_SPEED_KMPH * 1000.0 / 60.0)
 KNOCKBACK_SPEED_MPS = (KNOCKBACK_SPEED_MPM / 60.0)
 KNOCKBACK_SPEED_PPS = (KNOCKBACK_SPEED_MPS * PIXEL_PER_METER)
@@ -344,6 +344,7 @@ class Kirby:
         self.image = load_image('Kirby_sheet.png')
 
         self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
+        self.knockback_timer = 0.0
 
         self.IDLE = Idle(self)
         self.SLEEP = Sleep(self)
@@ -370,13 +371,17 @@ class Kirby:
         )
 
     def update(self):
+        if self.knockback_timer > 0:
+            self.knockback_timer -= game_framework.frame_time
+            self.x += self.dir * KNOCKBACK_SPEED_PPS * game_framework.frame_time
+            return
+
         self.state_machine.update()
-        pass
 
     def draw(self):
         self.state_machine.draw()
+
         draw_rectangle(*self.get_bb())
-        pass
 
     def fire_star(self):
         print("Fire Star!")
@@ -390,7 +395,12 @@ class Kirby:
     def handle_collision(self, group, other):
         if group == 'kirby:monster':
             print("Kirby Hit Monster!")
-            pass
+
+            self.knockback_timer = 0.3
+            if self.x < other.x:
+                self.dir = -1
+            else:
+                self.dir = 1
 
     def handle_event(self, event):
         e = ('INPUT', event)

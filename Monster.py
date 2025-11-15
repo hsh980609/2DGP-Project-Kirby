@@ -9,7 +9,7 @@ MONSTER_SPEED_MPS = (MONSTER_SPEED_MPM / 60.0)
 MONSTER_SPEED_PPS = (MONSTER_SPEED_MPS * PIXEL_PER_METER)
 
 # 충돌시 넉백 속도
-KNOCKBACK_SPEED_KMPH = 30.0  # 넉백 속도
+KNOCKBACK_SPEED_KMPH = 10.0  # 넉백 속도
 KNOCKBACK_SPEED_MPM = (KNOCKBACK_SPEED_KMPH * 1000.0 / 60.0)
 KNOCKBACK_SPEED_MPS = (KNOCKBACK_SPEED_MPM / 60.0)
 KNOCKBACK_SPEED_PPS = (KNOCKBACK_SPEED_MPS * PIXEL_PER_METER)
@@ -76,7 +76,7 @@ class Monster:
         elif group == 'kirby:monster':
             if self.knockback_timer <= 0: # 넉백 중 아니라면
                 print(f'충돌! - 몬스터쪽 알람')
-                self.knockback_timer = 0.3 # 0.3초간 넉백
+                self.knockback_timer = 0.5 # 0.5초간 넉백
                 # 커비와 반 방향으로 튕겨나감
                 if self.x <other.x:
                     self.dir = -1
