@@ -35,7 +35,7 @@ class Star:
             game_world.remove_object(self)
 
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 50, self.y - 10, self.x + 25, self.y + 40
 
     def handle_collision(self, group, other):
         if group == 'star:monster':
