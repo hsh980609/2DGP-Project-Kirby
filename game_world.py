@@ -47,7 +47,12 @@ def add_collision_pair(group, a, b):
         collision_pairs[group][0].append(a)
 
 def handle_collision():
-    pass
+    for group, pairs in collision_pairs.items():
+        for a in pairs[0]:
+            for b in pairs[1]:
+                if collide(a,b):
+                    a.handle_collision(group, b)
+                    b.handle_collision(group, a)
 
 def remove_collision_object(o):
     pass
