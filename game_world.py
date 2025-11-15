@@ -33,3 +33,15 @@ def collide(a, b):
     if bottom_a > top_b: return False
 
     return True
+
+# 충돌 페어 등록
+collision_pairs = {}
+
+def add_collision_pair(group, a, b):
+    pass
+
+def handle_collision():
+    pass
+
+def remove_collision_object(o):
+    pass
