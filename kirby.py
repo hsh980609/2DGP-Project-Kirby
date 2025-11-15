@@ -331,6 +331,10 @@ class Suction:
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 27, 3213, 25, 27, 0, 'h', self.Kirby.x,
                                                  self.Kirby.y, 100, 100)
+        draw_rectangle(*self.get_bb())
+
+    def get_bb(self):
+        return self.Kirby.x + 10, self.Kirby.y - 20, self.Kirby.x + 150, self.Kirby.y + 30
 
 class Kirby:
     def __init__(self):
