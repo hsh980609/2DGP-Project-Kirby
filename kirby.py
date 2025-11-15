@@ -338,7 +338,8 @@ class Suction:
 
     def handle_collision(self, group, other):
         if group == 'suction:monster':
-            print("커비가 빨아들이는 중")
+            if self.Kirby.state_machine.cur_state == self:
+                print("커비가 빨아들이는 중")
 
 class Kirby:
     def __init__(self):

@@ -37,6 +37,8 @@ class Monster:
         self.dir = -1
 
         self.knockback_timer = 0.0
+        self.is_being_sucked = False
+        self.target = None
 
         self.patrol_start_x = 400
         self.patrol_end_x = 600
@@ -45,6 +47,17 @@ class Monster:
         if self.knockback_timer > 0: # 넉백 상태라면
             self.x += self.dir * KNOCKBACK_SPEED_PPS * game_framework.frame_time
             self.knockback_timer -= game_framework.frame_time
+
+        elif self.is_being_sucked:
+            if self.x < self.target.x:
+                self.dir = 1
+                self.x += MONSTER_SPEED_PPS * 2 *game_framework.frame_time
+            else:
+                self.dir = -1
+                self.x -= MONSTER_SPEED_PPS * 2 * game_framework.frame_time
+            self.is_being_sucked = False
+            self.target = None
+
         else:# 순찰
             self.frame = ( self.frame + MONSTER_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % MONSTER_FRAMES_PER_ACTION
             self.x += self.dir * MONSTER_SPEED_PPS * game_framework.frame_time
@@ -100,4 +113,7 @@ class Monster:
                 else:
                     self.dir = 1
         elif group == 'suction:monster':
-            print('몬스터 끌려감')
+            if other.Kirby.state_machine.cur_state == other:
+                print('몬스터 끌려감')
+                self.is_being_sucked = True
+                self.target = other.Kirby
