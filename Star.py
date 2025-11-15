@@ -9,7 +9,7 @@ class Star:
         self.x, self.y = x, y
 
     def draw(self):
-        self.image.draw(self.x, self.y)
+        self.image.clip_draw(593,410,30,50,self.x,self.y,100,100)
         draw_rectangle(*self.get_bb())
 
     def update(self):
