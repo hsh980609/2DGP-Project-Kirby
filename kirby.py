@@ -59,6 +59,11 @@ WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
+# 충돌시 넉백 속도
+KNOCKBACK_SPEED_KMPH = 30.0  # 넉백 속도
+KNOCKBACK_SPEED_MPM = (KNOCKBACK_SPEED_KMPH * 1000.0 / 60.0)
+KNOCKBACK_SPEED_MPS = (KNOCKBACK_SPEED_MPM / 60.0)
+KNOCKBACK_SPEED_PPS = (KNOCKBACK_SPEED_MPS * PIXEL_PER_METER)
 
 TIME_PER_ACTION = 0.5 # 한번의 액션재생에 0.5초
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 1초에 2번 액션 수행
@@ -381,6 +386,11 @@ class Kirby:
 
     def get_bb(self):
         return self.x -35, self.y - 30, self.x + 40, self.y + 40
+
+    def handle_collision(self, group, other):
+        if group == 'kirby:monster':
+            print("Kirby Hit Monster!")
+            pass
 
     def handle_event(self, event):
         e = ('INPUT', event)
