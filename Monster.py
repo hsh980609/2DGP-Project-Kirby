@@ -26,8 +26,7 @@ class Monster:
     def __init__(self):
         if Monster.image == None:
             Monster.image = load_image('Monster.png')
-
-        self.x, self.y = 500, 110
+        self.x, self.y = 500, 120
         self.frame = 0
         self.dir = -1
 
@@ -54,10 +53,10 @@ class Monster:
             self.image.clip_draw(M_left,120,30,30, self.x, self.y, 100, 100)
         else:
             self.image.clip_composite_draw(M_left, 120,30,30, 0, 'h', self.x, self.y, 100, 100)
-        pass
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        pass
+        return self.x - 30, self.y - 45, self.x + 30, self.y + 15
 
     def handle_collision(self, group, other):
         pass
