@@ -80,10 +80,10 @@ class Monster:
 
     def handle_collision(self, group, other):
         if group == 'star:monster':
-            print(f'별과 몬스터 충돌!-몬스터쪽 알람')
+            print('별과 몬스터 충돌!-몬스터쪽 알람')
             # 임시로 별과 충돌하면 밀려나게만 해놓음.
             if self.knockback_timer <= 0: # 넉백 중 아니라면
-                print(f'충돌! - 몬스터쪽 알람')
+                print('충돌! - 몬스터쪽 알람')
                 self.knockback_timer = 0.5 # 0.5초간 넉백
                 # 커비와 반 방향으로 튕겨나감
                 if self.x <other.x:
@@ -92,7 +92,7 @@ class Monster:
                     self.dir = 1
         elif group == 'kirby:monster':
             if self.knockback_timer <= 0: # 넉백 중 아니라면
-                print(f'충돌! - 몬스터쪽 알람')
+                print('충돌! - 몬스터쪽 알람')
                 self.knockback_timer = 0.5 # 0.5초간 넉백
                 # 커비와 반 방향으로 튕겨나감
                 if self.x <other.x:
@@ -100,4 +100,4 @@ class Monster:
                 else:
                     self.dir = 1
         elif group == 'suction:monster':
-            print(f'몬스터 끌려감')
+            print('몬스터 끌려감')

@@ -9,7 +9,7 @@ def add_objects(ol, depth=0):
 def remove_object(o):
     for layer in world:
         if o in layer:
-            print(f'delete..star')
+            print('delete..star')
             layer.remove(o)
             remove_collision_object(o)
             return
