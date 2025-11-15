@@ -9,7 +9,9 @@ def add_objects(ol, depth=0):
 def remove_object(o):
     for layer in world:
         if o in layer:
+            print(f'delete..star')
             layer.remove(o)
+            remove_collision_object(o)
             return
     raise ValueError('Cannot delete non existing object')
 
@@ -44,7 +46,7 @@ def add_collision_pair(group, a, b):
     if a:
         collision_pairs[group][0].append(a)
     if b:
-        collision_pairs[group][0].append(a)
+        collision_pairs[group][1].append(b)
 
 def handle_collision():
     for group, pairs in collision_pairs.items():
@@ -55,4 +57,9 @@ def handle_collision():
                     b.handle_collision(group, a)
 
 def remove_collision_object(o):
+    for pairs in collision_pairs.values():
+        if o in pairs[0]:
+            pairs[0].remove(o)
+        if o in pairs[1]:
+            pairs[1].remove(o)
     pass

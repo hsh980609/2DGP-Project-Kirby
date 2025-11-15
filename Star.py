@@ -38,4 +38,9 @@ class Star:
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def handle_collision(self, group, other):
+        if group == 'star:monster':
+            print(f'충돌!')
+            game_world.remove_object(self)
+        elif group == 1:
+            pass
         pass

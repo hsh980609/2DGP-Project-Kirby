@@ -39,9 +39,12 @@ def init():
     monster = Monster()
     game_world.add_object(monster, 2)
 
+    game_world.add_collision_pair('star:monster', monster, None)
+
 
 def update():
     game_world.update()
+    game_world.handle_collision()
 
 
 def draw():

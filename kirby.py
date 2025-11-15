@@ -2,6 +2,7 @@ import time
 from pico2d import *
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_DOWN, SDLK_UP, SDLK_c, SDLK_x, SDLK_z
 
+import game_world
 import game_framework
 from state_machine import StateMachine
 from Star import Star
@@ -375,7 +376,8 @@ class Kirby:
     def fire_star(self):
         print("Fire Star!")
         star = Star(self.x, self.y,self.face_dir)
-        pass
+
+        game_world.add_collision_pair('star:monster',None, star)
 
     def get_bb(self):
         return self.x -35, self.y - 30, self.x + 40, self.y + 40
