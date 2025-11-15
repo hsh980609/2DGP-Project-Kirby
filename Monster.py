@@ -99,3 +99,5 @@ class Monster:
                     self.dir = -1
                 else:
                     self.dir = 1
+        elif group == 'suction:monster':
+            print(f'몬스터 끌려감')

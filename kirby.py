@@ -336,6 +336,10 @@ class Suction:
     def get_bb(self):
         return self.Kirby.x + 10, self.Kirby.y - 20, self.Kirby.x + 150, self.Kirby.y + 30
 
+    def handle_collision(self, group, other):
+        if group == 'suction:monster':
+            print("커비가 빨아들이는 중")
+
 class Kirby:
     def __init__(self):
         self.x, self.y =400, 100
@@ -410,6 +414,7 @@ class Kirby:
                 self.dir = -1
             else:
                 self.dir = 1
+
 
     def handle_event(self, event):
         e = ('INPUT', event)

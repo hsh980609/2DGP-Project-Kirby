@@ -41,6 +41,7 @@ def init():
 
     game_world.add_collision_pair('star:monster', monster, None)
     game_world.add_collision_pair('kirby:monster', kirby, monster)
+    game_world.add_collision_pair('suction:monster', kirby.SUCTION,monster)
 
 
 def update():
