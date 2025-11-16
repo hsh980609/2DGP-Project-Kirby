@@ -9,8 +9,8 @@ class StateMachine:
     def update(self):
         self.cur_state.do()
 
-    def draw(self):
-        self.cur_state.draw()
+    def draw(self,offset_x = 0):
+        self.cur_state.draw(offset_x)
 
 
     def handle_state_event(self,event):

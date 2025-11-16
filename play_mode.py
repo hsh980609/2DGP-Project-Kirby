@@ -8,6 +8,8 @@ from Monster import Monster
 
 kirby = None
 running = True
+camera_offset_x = 0
+camera_offset_y = 0 # 임시
 
 def handle_events():
     global running
@@ -45,13 +47,19 @@ def init():
 
 
 def update():
+    global camera_offset_x
+
     game_world.update()
     game_world.handle_collision()
+
+    camera_offset_x = kirby.x - 400
+    if camera_offset_x < 0:
+        camera_offset_x = 0
 
 
 def draw():
     clear_canvas()
-    game_world.render()
+    game_world.render(camera_offset_x)
     update_canvas()
 
 def finish():

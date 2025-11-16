@@ -19,12 +19,13 @@ class Star:
 
         game_world.add_object(self, 2)
 
-    def draw(self):
+    def draw(self,offset_x=0):
+        screen_x = self.x - offset_x
 
         if self.dir ==1:
-            self.image.clip_draw(593,410,30,50,self.x,self.y,100,100)
+            self.image.clip_draw(593,410,30,50,screen_x,self.y,100,100)
         else:
-            self.image.clip_draw(593,410,30,50,self.x,self.y,100,100)
+            self.image.clip_draw(593,410,30,50,screen_x,self.y,100,100)
 
         draw_rectangle(*self.get_bb())
 

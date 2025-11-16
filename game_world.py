@@ -20,10 +20,10 @@ def update():
         for o in layer:
             o.update()
 
-def render():
+def render(offset_x=0):
     for layer in world:
         for o in layer:
-            o.draw()
+            o.draw(offset_x)
 
 def collide(a, b):
     left_a, bottom_a, right_a, top_a = a.get_bb()

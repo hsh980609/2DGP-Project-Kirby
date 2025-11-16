@@ -13,7 +13,6 @@ class Background:
     def update(self):
         pass
 
-    def draw(self):
+    def draw(self,offset_x = 0):
         self.image.clip_draw(0, self.clip_bottom, self.clip_w, self.clip_h, 400, 300, 1000, 900)
-        #self.image.clip_draw(0,self.clip_bottom, self.clip_w, self.clip_h, 1200, 30)
 

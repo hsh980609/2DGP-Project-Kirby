@@ -91,11 +91,12 @@ class Sleep:
 
     def exit(self,e):
         pass
-    def draw(self):
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(140 + int(self.Kirby.frame) * 25, 922, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(140 + int(self.Kirby.frame) * 25, 922, 25, 25, screen_x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(140 + int(self.Kirby.frame) * 25, 922, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(140 + int(self.Kirby.frame) * 25, 922, 25, 25, 0,'h', screen_x, self.Kirby.y,100,100)
 
 class Idle:
     def __init__(self, Kirby):
@@ -131,11 +132,12 @@ class Idle:
         self.Kirby.last_state = 0
 
 
-    def draw(self):
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 25, 3360, 25, 25, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 25, 3360, 25, 25, screen_x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 25, 3360, 25, 25, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 25, 3360, 25, 25, 0,'h', screen_x, self.Kirby.y,100,100)
 
 class Walk:
     def __init__(self, Kirby):
@@ -158,11 +160,12 @@ class Walk:
         self.Kirby.last_state = 0 # walk
         pass
 
-    def draw(self):
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(4 + int(self.Kirby.frame) * 24, 3266, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(4 + int(self.Kirby.frame) * 24, 3266, 23, 23, screen_x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(4 + int(self.Kirby.frame) * 24, 3266, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(4 + int(self.Kirby.frame) * 24, 3266, 23, 23, 0, 'h', screen_x, self.Kirby.y,100,100)
 
 class Run:
     def __init__(self, Kirby):
@@ -184,11 +187,12 @@ class Run:
         self.Kirby.last_state = 1 # run
         pass
 
-    def draw(self):
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(5 + int(self.Kirby.frame) * 24, 3241, 23, 23, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(5 + int(self.Kirby.frame) * 24, 3241, 23, 23, screen_x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(5 + int(self.Kirby.frame) * 24, 3241, 23, 23, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(5 + int(self.Kirby.frame) * 24, 3241, 23, 23, 0, 'h', screen_x, self.Kirby.y,100,100)
 
 class Run_Stop:
     def __init__(self, Kirby):
@@ -209,11 +213,12 @@ class Run_Stop:
     def exit(self,e):
         pass
 
-    def draw(self):
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(200 + int(self.Kirby.frame) * 23, 3241, 23, 24, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(200 + int(self.Kirby.frame) * 23, 3241, 23, 24, screen_x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(200 + int(self.Kirby.frame) * 23, 3241, 23, 24, 0, 'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(200 + int(self.Kirby.frame) * 23, 3241, 23, 24, 0, 'h', screen_x, self.Kirby.y,100,100)
 
 class Jump:
     def __init__(self, Kirby):
@@ -266,11 +271,12 @@ class Jump:
         self.Kirby.y_start = 0
         # self.Kirby.dir = 0
 
-    def draw(self):
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 26, 3290, 26, 26, self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 26, 3290, 26, 26, screen_x, self.Kirby.y,100,100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 26, 3290, 26, 26, 0,'h', self.Kirby.x, self.Kirby.y,100,100)
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 26, 3290, 26, 26, 0,'h', screen_x, self.Kirby.y,100,100)
 
 class Fly:
     def __init__(self, Kirby):
@@ -301,11 +307,12 @@ class Fly:
         self.Kirby.last_state = 3
         pass
 
-    def draw(self):
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 30, 3158, 30, 29, self.Kirby.x, self.Kirby.y, 100, 100)
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 30, 3158, 30, 29, screen_x, self.Kirby.y, 100, 100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 30, 3158, 30, 29, 0, 'h', self.Kirby.x,self.Kirby.y, 100, 100)
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 30, 3158, 30, 29, 0, 'h', screen_x,self.Kirby.y, 100, 100)
 
 class Suction:
     def __init__(self, Kirby):
@@ -325,11 +332,12 @@ class Suction:
         self.Kirby.fire_star()
         pass
 
-    def draw(self):
+    def draw(self,offset_x):
+        screen_x = self.Kirby.x - offset_x
         if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 27, 3213, 25, 27, self.Kirby.x, self.Kirby.y, 100, 100)
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 27, 3213, 25, 27, screen_x, self.Kirby.y, 100, 100)
         else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 27, 3213, 25, 27, 0, 'h', self.Kirby.x,
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 27, 3213, 25, 27, 0, 'h', screen_x,
                                                  self.Kirby.y, 100, 100)
         draw_rectangle(*self.get_bb())
 
@@ -387,13 +395,13 @@ class Kirby:
 
         self.state_machine.update()
 
-    def draw(self):
+    def draw(self,offset_x=0):
         if self.knockback_timer > 0:
             # 홀수 일때만 출력하여 깜빡거리는 모션 연출
             if int(self.knockback_timer * 10) % 2 == 1:
-                self.state_machine.draw()
+                self.state_machine.draw(offset_x)
         else:
-            self.state_machine.draw()
+            self.state_machine.draw(offset_x)
 
         draw_rectangle(*self.get_bb())
 
