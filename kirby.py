@@ -351,7 +351,7 @@ class Suction:
 
 class Kirby:
     def __init__(self):
-        self.x, self.y =400, 100
+        self.x, self.y =10, 100
         self.y_start = 0
 
         self.frame = 0
@@ -403,7 +403,9 @@ class Kirby:
         else:
             self.state_machine.draw(offset_x)
 
-        draw_rectangle(*self.get_bb())
+        l,b,r,t = self.get_bb()
+        draw_rectangle(l-offset_x,b,r-offset_x,t)
+        #draw_rectangle(*self.get_bb())
 
     def fire_star(self):
         print("Fire Star!")
