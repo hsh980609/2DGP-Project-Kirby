@@ -98,16 +98,21 @@ class Monster:
             if self.knockback_timer <= 0: # 넉백 중 아니라면
                 print('충돌! - 몬스터쪽 알람')
                 self.knockback_timer = 0.5 # 0.5초간 넉백
-                # 커비와 반 방향으로 튕겨나감
+                # 커비와 반대 방향으로 튕겨나감
                 if self.x <other.x:
                     self.dir = -1
                 else:
                     self.dir = 1
         elif group == 'kirby:monster':
-            if self.knockback_timer <= 0: # 넉백 중 아니라면
+            # 석션 상태라면 몬스터 삼켜짐 처리
+            if other.state_machine.cur_state == other.SUCTION:
+                print('몬스터 삼켜짐(삭제)')
+                game_world.remove_object(self)
+
+            elif self.knockback_timer <= 0: # 넉백 중 아니라면
                 print('충돌! - 몬스터쪽 알람')
                 self.knockback_timer = 0.5 # 0.5초간 넉백
-                # 커비와 반 방향으로 튕겨나감
+                # 커비와 반대 방향으로 튕겨나감
                 if self.x <other.x:
                     self.dir = -1
                 else:
