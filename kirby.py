@@ -408,13 +408,20 @@ class Kirby:
 
     def handle_collision(self, group, other):
         if group == 'kirby:monster':
-            print("Kirby Hit Monster!")
+            # 석션 상태라면 몬스터 삼켜짐 처리
+            if self.state_machine.cur_state == self.SUCTION:
+                print('몬스터 삼킴')
+                # 두번 삭제하면 안됨
+                #game_world.remove_object(other)
+            elif self.knockback_timer <= 0:
+                print("Kirby Hit Monster!")
+                self.knockback_timer = 0.5
+                if self.x < other.x:
+                    self.dir = -1
+                else:
+                    self.dir = 1
 
-            self.knockback_timer = 0.5
-            if self.x < other.x:
-                self.dir = -1
-            else:
-                self.dir = 1
+
 
 
     def handle_event(self, event):
