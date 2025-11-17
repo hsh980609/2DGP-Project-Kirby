@@ -43,7 +43,13 @@ def init():
     grounds = [
         Ground(-550, 35, 800, 70),
         Ground(-100,35,80,180 ),
-        Ground(280, 35, 650, 70)
+        Ground(280, 35, 650, 70),
+        Ground(730, 35, 255, 180),
+        Ground(950, 35, 200, 70),
+        Ground(1200, 35, 255, 180),
+        Ground(1370, 35, 80, 630),
+        Ground(1440, 35, 45, 400),
+        Ground(1700, 35, 500, 180),
     ]
     game_world.add_objects(grounds, 1)
 
