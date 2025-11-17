@@ -3,7 +3,7 @@ from pico2d import *
 import game_framework
 import game_world
 from kirby import Kirby
-from background import Background
+from background import Boss_Background
 from stage import Ground
 
 
@@ -11,7 +11,7 @@ def init():
     print("보스룸 시작")
     global kirby
 
-    background = Background()
+    background = Boss_Background()
     game_world.add_object(background, 0)
 
     kirby = Kirby()
