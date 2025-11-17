@@ -368,6 +368,7 @@ class Kirby:
 
         self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
         self.knockback_timer = 0.0
+        self.font = load_font('ENCR10B.TTF', 16)
 
         self.IDLE = Idle(self)
         self.SLEEP = Sleep(self)
