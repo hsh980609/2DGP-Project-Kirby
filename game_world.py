@@ -63,3 +63,10 @@ def remove_collision_object(o):
         if o in pairs[1]:
             pairs[1].remove(o)
     pass
+
+def clear():
+    global world, collision_pairs
+    for layer in world:
+        layer.clear()
+    collision_pairs.clear()
+    print('게임월드 클리어')
