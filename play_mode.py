@@ -4,6 +4,7 @@ import game_world
 from kirby import Kirby
 from background import Background
 from stage import Stage
+from stage import Ground
 from Monster import Monster
 
 kirby = None
@@ -38,6 +39,13 @@ def init():
 
     stage = Stage()
     game_world.add_object(stage, 1)
+
+    grounds = [
+        Ground(-550, 35, 800, 70),
+        Ground(-100,35,80,180 ),
+        Ground(280, 35, 650, 70)
+    ]
+    game_world.add_objects(grounds, 1)
 
     kirby = Kirby()
     game_world.add_object(kirby, 2)
