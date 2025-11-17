@@ -17,6 +17,9 @@ camera_offset_y = 0 # 임시
 stage = None
 SCREEN_WIDTH = 800
 
+PORTAL_X_MIN = 1830
+PORTAL_X_MAX = 1870
+
 def handle_events():
     global running
 
