@@ -11,6 +11,9 @@ running = True
 camera_offset_x = 0
 camera_offset_y = 0 # 임시
 
+stage = None
+SCREEN_WIDTH = 800
+
 def handle_events():
     global running
 
@@ -26,6 +29,7 @@ def handle_events():
 def init():
     global kirby
     global running
+    global stage
 
     running = True
 
@@ -52,9 +56,13 @@ def update():
     game_world.update()
     game_world.handle_collision()
 
-    camera_offset_x = kirby.x - 400
-    if camera_offset_x < 0:
-        camera_offset_x = 0
+    camera_offset_x = kirby.x - (SCREEN_WIDTH // 2) # 400
+
+    if camera_offset_x < -950:
+        camera_offset_x = -950
+    elif camera_offset_x >1150:
+        camera_offset_x = 1150
+
 
 
 def draw():

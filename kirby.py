@@ -351,7 +351,7 @@ class Suction:
 
 class Kirby:
     def __init__(self):
-        self.x, self.y =10, 100
+        self.x, self.y =-900, 100
         self.y_start = 0
 
         self.frame = 0
