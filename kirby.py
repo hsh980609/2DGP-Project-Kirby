@@ -439,6 +439,22 @@ class Kirby:
                     self.dir = -1
                 else:
                     self.dir = 1
+        elif group == 'kirby:ground':
+            kl, kb, kr, kt = self.get_bb()
+            gl, gb, gr, gt = other.get_bb()
+
+            collision_l = kr - gl  # 커비 우 -> 발판 좌
+            collision_r = gr - kl  # 커비 좌 <- 발판 우
+            collision_b = gt - kb  # 커비 발 -> 발판 윗면
+
+            min_collision = min(collision_l, collision_r, collision_b)
+            if min_collision == collision_b:
+                self.y += collision_b  # 겹친 만큼 Y좌표를 밀어 올림
+            elif min_collision == collision_l:
+                self.x -= collision_l  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
+            elif min_collision == collision_r:
+                self.x += collision_r  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
+
 
     def handle_event(self, event):
         e = ('INPUT', event)
