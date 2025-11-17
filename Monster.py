@@ -29,10 +29,10 @@ class Monster:
         (110)
     ]
 
-    def __init__(self):
+    def __init__(self,x,y):
         if Monster.image == None:
             Monster.image = load_image('Monster.png')
-        self.x, self.y = 500, 120
+        self.x, self.y = x, y
         self.frame = 0
         self.dir = -1
 
@@ -40,8 +40,8 @@ class Monster:
         self.is_being_sucked = False
         self.target = None
 
-        self.patrol_start_x = 400
-        self.patrol_end_x = 600
+        self.patrol_start_x = self.x - 100
+        self.patrol_end_x = self.x + 100
 
     def update(self):
         if self.knockback_timer > 0: # 넉백 상태라면
