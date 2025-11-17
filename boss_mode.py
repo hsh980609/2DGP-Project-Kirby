@@ -4,6 +4,7 @@ import game_framework
 import game_world
 from kirby import Kirby
 from background import Background
+from stage import Ground
 
 
 def init():
@@ -14,7 +15,14 @@ def init():
     game_world.add_object(background, 0)
 
     kirby = Kirby()
+    kirby.x, kirby.y = 100, 100
     game_world.add_object(kirby, 2)
+
+    grounds = [
+        Ground(100, 35, 800, 70),
+    ]
+    for ground in grounds:
+        game_world.add_collision_pair('kirby:ground', kirby, ground)
 
 
 def finish():
@@ -24,13 +32,16 @@ def finish():
 def handle_events():
     events = get_events()
     for event in events:
-        if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
             kirby.handle_event(event)
 
 def update():
-    pass
+    game_world.update()
+    game_world.handle_collision()
 
 def draw():
     clear_canvas()

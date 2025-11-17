@@ -97,7 +97,9 @@ def draw():
     update_canvas()
 
 def finish():
-    pass
+    global kirby
+    game_world.clear()
+    kirby = None
 
 def pause():
     pass

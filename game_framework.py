@@ -7,7 +7,8 @@ stack = None
 def change_mode(mode): # 현재 모드 삭제하고 새로운 모드 추가하면서 init 호출
     global stack
     if (len(stack) > 0):
-        stack[-1].pause()
+        stack[-1].finish()
+        stack.pop()
     stack.append(mode)
     mode.init()
 

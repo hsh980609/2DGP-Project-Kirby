@@ -65,7 +65,6 @@ def remove_collision_object(o):
     pass
 
 def clear():
-    global world, collision_pairs
     for layer in world:
         layer.clear()
     collision_pairs.clear()
