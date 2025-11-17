@@ -2,6 +2,7 @@ from pico2d import *
 
 import game_framework
 import game_world
+import boss_mode
 from kirby import Kirby
 from background import Background
 from stage import Stage
@@ -25,6 +26,11 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
+        elif event.type ==SDL_KEYDOWN and event.key == SDLK_UP:
+            if PORTAL_X_MIN < kirby.x <PORTAL_X_MAX:
+                game_framework.change_mode(boss_mode)
+            else:
+                kirby.handle_event(event)
         else:
             kirby.handle_event(event)
 
