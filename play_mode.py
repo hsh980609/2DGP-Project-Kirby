@@ -1,5 +1,6 @@
 from pico2d import *
 
+import game_framework
 import game_world
 from kirby import Kirby
 from background import Background
@@ -21,9 +22,9 @@ def handle_events():
     event_list = get_events()
     for event in event_list:
         if event.type == SDL_QUIT:
-            running = False
+            game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
+            game_framework.quit()
         else:
             kirby.handle_event(event)
 
