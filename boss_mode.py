@@ -19,8 +19,9 @@ def init():
     game_world.add_object(kirby, 2)
 
     grounds = [
-        Ground(100, 35, 800, 70),
+        Ground(400, 35, 800, 70),
     ]
+    game_world.add_objects(grounds, 1)
     for ground in grounds:
         game_world.add_collision_pair('kirby:ground', kirby, ground)
 
