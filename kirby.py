@@ -311,8 +311,10 @@ class Suction:
             self.Kirby.frame = 4
 
     def exit(self, e):
-        self.Kirby.fire_star()
-        pass
+        if self.Kirby.star_bullet == True:
+            self.Kirby.fire_star()
+            self.Kirby.star_bullet = False #초기화
+
 
     def draw(self,offset_x):
         screen_x = self.Kirby.x - offset_x
@@ -339,7 +341,7 @@ class Suction:
 
 class Kirby:
     def __init__(self):
-        self.x, self.y =1900, 100
+        self.x, self.y = -900, 100
         self.y_start = 0
 
         self.frame = 0
@@ -349,6 +351,7 @@ class Kirby:
         self.y_velocity = 0.0
         self.gravity = 1000
         self.on_ground = False
+        self.star_bullet = False # Fire_star 쓸수있는지
 
         self.image = load_image('Kirby_sheet.png')
 
@@ -421,6 +424,7 @@ class Kirby:
             # 석션 상태라면 몬스터 삼켜짐 처리
             if self.state_machine.cur_state == self.SUCTION:
                 print('몬스터 삼킴')
+                self.star_bullet = True # 쏠수있음
                 # 두번 삭제하면 안됨
                 #game_world.remove_object(other)
             elif self.knockback_timer <= 0:
