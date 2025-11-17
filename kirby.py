@@ -149,18 +149,16 @@ class Walk:
                 self.Kirby.dir = self.Kirby.face_dir = 1
             elif left_down(e):
                 self.Kirby.dir = self.Kirby.face_dir = -1
-        # e가 없으면 Jump에서 쓰던 dir 유지
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + WALK_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
         # 중력 적용
         self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
-        self.Kirby.y_velocity -= self.Kirby.gravity * game_framework.frame_time
+        self.Kirby.y_velocity -= self.Kirby.gravity *3* game_framework.frame_time # 임시방편
 
     def exit(self,e):
         self.Kirby.last_state = 0 # walk
-        pass
 
     def draw(self,offset_x=0):
         screen_x = self.Kirby.x - offset_x
@@ -179,14 +177,13 @@ class Run:
                 self.Kirby.dir = self.Kirby.face_dir = 1
             elif left_down(e):
                 self.Kirby.dir = self.Kirby.face_dir = -1
-        # e가 없으면 Jump에서 쓰던 dir 유지
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + RUN_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * game_framework.frame_time
         # 중력 적용
         self.Kirby.y += self.Kirby.y_velocity *game_framework.frame_time
-        self.Kirby.y_velocity -= self.Kirby.gravity * game_framework.frame_time
+        self.Kirby.y_velocity -= self.Kirby.gravity *3 * game_framework.frame_time
 
     def exit(self,e):
         self.Kirby.last_state = 1 # run
@@ -351,6 +348,7 @@ class Kirby:
         self.dir_y = 0 # 위 1 아래 -1
         self.y_velocity = 0.0
         self.gravity = 1000
+        self.on_ground = False
 
         self.image = load_image('Kirby_sheet.png')
 
@@ -388,6 +386,7 @@ class Kirby:
             self.x += self.dir * KNOCKBACK_SPEED_PPS * game_framework.frame_time
             return
 
+        self.on_ground = False # 매 프레임마다 false로 초기화
         self.state_machine.update()
         if self.x > 1950:
             self.x = 1950
@@ -447,7 +446,10 @@ class Kirby:
                     if self.dir == 0:
                         self.state_machine.change_state(self.IDLE)
                     else:
-                        self.state_machine.change_state(self.WALK)
+                        if self.last_state == 1:
+                            self.state_machine.change_state(self.RUN)
+                        else:
+                            self.state_machine.change_state(self.WALK)
 
 
             elif min_collision == collision_l:
