@@ -345,7 +345,10 @@ class Suction:
         # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.Kirby.x + 10, self.Kirby.y - 20, self.Kirby.x + 150, self.Kirby.y + 30
+        if self.Kirby.face_dir == 1:
+            return self.Kirby.x + 10, self.Kirby.y - 20, self.Kirby.x + 150, self.Kirby.y + 30
+        else:
+            return self.Kirby.x - 10, self.Kirby.y - 20, self.Kirby.x - 150, self.Kirby.y + 30
 
     def handle_collision(self, group, other):
         if group == 'suction:monster':
@@ -433,9 +436,6 @@ class Kirby:
                     self.dir = -1
                 else:
                     self.dir = 1
-
-
-
 
     def handle_event(self, event):
         e = ('INPUT', event)
