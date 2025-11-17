@@ -152,9 +152,11 @@ class Walk:
         # e가 없으면 Jump에서 쓰던 dir 유지
 
     def do(self):
-
         self.Kirby.frame = (self.Kirby.frame + WALK_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
+        # 중력 적용
+        self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
+        self.Kirby.y_velocity -= self.Kirby.gravity * game_framework.frame_time
 
     def exit(self,e):
         self.Kirby.last_state = 0 # walk
@@ -182,6 +184,9 @@ class Run:
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + RUN_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * game_framework.frame_time
+        # 중력 적용
+        self.Kirby.y += self.Kirby.y_velocity *game_framework.frame_time
+        self.Kirby.y_velocity -= self.Kirby.gravity * game_framework.frame_time
 
     def exit(self,e):
         self.Kirby.last_state = 1 # run
@@ -223,29 +228,23 @@ class Run_Stop:
 class Jump:
     def __init__(self, Kirby):
         self.Kirby = Kirby
-        self.jump_velocity = 500 # 초당 500픽셀 점프
-        self.gravity = 1000 # 초당 1000픽셀씩 속도 감소
 
     def enter(self,e):
         self.Kirby.frame = 0
-        self.Kirby.y_velocity = self.jump_velocity
         if self.Kirby.last_state == 3:
-            self.Kirby.y_velocity = 0
+            self.Kirby.y_velocity = 0  # Fly에서
+        elif self.Kirby.last_state == 1:  # Run에서
+            self.Kirby.y_velocity = 600
+        else:  # Walk/Idle에서
+            self.Kirby.y_velocity = 500
 
     def do(self):
-        if self.Kirby.last_state == 0:  # walk
-            self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
-            self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
-            self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
+        self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
+        self.Kirby.y_velocity -= self.Kirby.gravity * game_framework.frame_time
 
-        elif self.Kirby.last_state == 1:  # run
-            self.Kirby.y += self.Kirby.y_velocity * 1.3 * game_framework.frame_time
-            self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
+        if self.Kirby.last_state == 1:  # run
             self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * game_framework.frame_time
-
-        elif self.Kirby.last_state == 3:  # fly
-            self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
-            self.Kirby.y_velocity -= self.gravity * game_framework.frame_time
+        else:  # fly, walk
             self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
 
         if self.Kirby.y_velocity > 0:
@@ -253,23 +252,9 @@ class Jump:
         else:
             self.Kirby.frame = ( self.Kirby.frame + JUMP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
 
-        # 땅에 닿았는지 확인
-        if self.Kirby.y <= MAP_FLOOR_Y:
-            self.Kirby.y = MAP_FLOOR_Y
-            self.Kirby.y_velocity = 0
-
-            if self.Kirby.dir == 0:
-                self.Kirby.state_machine.change_state(self.Kirby.IDLE)
-            elif self.Kirby.dir == 1 or self.Kirby.dir == -1:
-                if self.Kirby.last_state == 0: # walk
-                    self.Kirby.state_machine.change_state(self.Kirby.WALK)
-                elif self.Kirby.last_state == 1: # run
-                    self.Kirby.state_machine.change_state(self.Kirby.RUN)
-
 
     def exit(self,e):
         self.Kirby.y_start = 0
-        # self.Kirby.dir = 0
 
     def draw(self,offset_x=0):
         screen_x = self.Kirby.x - offset_x
@@ -364,6 +349,9 @@ class Kirby:
         self.face_dir = 1
         self.dir = 0
         self.dir_y = 0 # 위 1 아래 -1
+        self.y_velocity = 0.0
+        self.gravity = 1000
+
         self.image = load_image('Kirby_sheet.png')
 
         self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
@@ -454,6 +442,14 @@ class Kirby:
             min_collision = min(collision_l, collision_r, collision_b)
             if min_collision == collision_b:
                 self.y += collision_b  # 겹친 만큼 Y좌표를 밀어 올림
+                self.y_velocity = 0 # 중력 초기화
+                if self.state_machine.cur_state == self.JUMP:
+                    if self.dir == 0:
+                        self.state_machine.change_state(self.IDLE)
+                    else:
+                        self.state_machine.change_state(self.WALK)
+
+
             elif min_collision == collision_l:
                 self.x -= collision_l  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
             elif min_collision == collision_r:
