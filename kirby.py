@@ -206,6 +206,9 @@ class Run_Stop:
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + RUN_STOP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
         self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * 0.1 * game_framework.frame_time
+        # 중력 적용
+        self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
+        self.Kirby.y_velocity -= self.Kirby.gravity * 3 * game_framework.frame_time  # 임시방편
 
         if self.Kirby.frame >= 1:
             self.Kirby.frame = 1
