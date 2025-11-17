@@ -410,6 +410,8 @@ class Kirby:
         else:
             self.state_machine.draw(offset_x)
 
+        screen_x = self.x - offset_x
+        self.font.draw(screen_x - 60, self.y + 60,f'X: {self.x:.0f}, Y: {self.y:.0f}',(255, 255, 0))
         l,b,r,t = self.get_bb()
         draw_rectangle(l-offset_x,b,r-offset_x,t)
         #draw_rectangle(*self.get_bb())
