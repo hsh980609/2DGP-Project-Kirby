@@ -401,6 +401,10 @@ class Kirby:
             return
 
         self.state_machine.update()
+        if self.x > 1950:
+            self.x = 1950
+        elif self.x < -950:
+            self.x = -950
 
     def draw(self,offset_x=0):
         if self.knockback_timer > 0:
