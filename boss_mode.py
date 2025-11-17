@@ -44,6 +44,11 @@ def update():
     game_world.update()
     game_world.handle_collision()
 
+    if kirby.x < 20:
+        kirby.x = 20
+    elif kirby.x >800:
+        kirby.x = 800
+
 def draw():
     clear_canvas()
     game_world.render()
