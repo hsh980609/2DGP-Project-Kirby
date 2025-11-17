@@ -52,7 +52,7 @@ class Monster:
             if self.x < self.target.x:
                 self.dir = 1
                 self.x += MONSTER_SPEED_PPS * 2 *game_framework.frame_time
-            else:
+            elif self.x > self.target.x:
                 self.dir = -1
                 self.x -= MONSTER_SPEED_PPS * 2 * game_framework.frame_time
             self.is_being_sucked = False
