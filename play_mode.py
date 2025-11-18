@@ -66,7 +66,7 @@ def init():
     kirby = Kirby()
     game_world.add_object(kirby, 2)
 
-    monster = Monster(500,120)
+    monster = Monster(400,120)
     game_world.add_object(monster, 2)
 
     game_world.add_collision_pair('star:monster', monster, None)
