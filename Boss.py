@@ -1,10 +1,14 @@
 from pico2d import *
+
+import random
+import math
 import game_framework
 import game_world
+from behavior_tree import BehaviorTree, Action, Sequence, Condition, Selector
 
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-IDLE_FRAMES_PER_ACTION = 4
+FRAMES_PER_ACTION = 4
 
 
 class Boss:
@@ -17,17 +21,19 @@ class Boss:
         self.frame = 0
         self.dir = 1
         self.target = None
+        self.state = 'Idle'
 
     def update(self):
-       pass
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
+
 
     def draw(self, offset_x=0):  # offset_x 추가
         screen_x = self.x - offset_x
 
         if self.dir == 1:
-            self.image.clip_draw(0, 700, 68, 100, screen_x, self.y, 300, 300)
+            self.image.clip_draw(int(self.frame) * 66, 700, 68, 100, screen_x, self.y, 300, 300)
         else:
-            self.image.clip_composite_draw(0, 700, 68, 100, 0, 'h', screen_x, self.y, 300, 300)
+            self.image.clip_composite_draw(int(self.frame) * 66, 700, 68, 100, 0, 'h', screen_x, self.y, 300, 300)
 
     def get_bb(self):
         pass
