@@ -392,7 +392,7 @@ class Kirby:
             self.x += self.dir * KNOCKBACK_SPEED_PPS * game_framework.frame_time
             return
 
-        self.on_ground = False # 매 프레임마다 false로 초기화
+        #self.on_ground = False # 매 프레임마다 false로 초기화
         self.state_machine.update()
         if self.x > 1950:
             self.x = 1950
@@ -431,7 +431,7 @@ class Kirby:
                 # 두번 삭제하면 안됨
                 #game_world.remove_object(other)
             elif self.knockback_timer <= 0:
-                print("Kirby Hit Monster!")
+                print("커비 몬스터 충돌")
                 self.knockback_timer = 0.5
                 if self.x < other.x:
                     self.dir = -1
@@ -448,7 +448,7 @@ class Kirby:
             min_collision = min(collision_l, collision_r, collision_b)
             if min_collision == collision_b:
                 self.y += collision_b  # 겹친 만큼 Y좌표를 밀어 올림
-                self.y_velocity = 0 # 중력 초기화
+                self.y_velocity = 0
                 if self.state_machine.cur_state == self.JUMP:
                     if self.dir == 0:
                         self.state_machine.change_state(self.IDLE)
