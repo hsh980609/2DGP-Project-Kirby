@@ -5,7 +5,7 @@ import game_world
 from kirby import Kirby
 from background import Boss_Background
 from stage import Ground
-
+from Boss import Boss
 
 def init():
     print("보스룸 시작")
@@ -17,6 +17,9 @@ def init():
     kirby = Kirby()
     kirby.x, kirby.y = 100, 100
     game_world.add_object(kirby, 2)
+
+    boss = Boss()
+    game_world.add_object(boss, 2)
 
     grounds = [
         Ground(400, 35, 800, 70),
