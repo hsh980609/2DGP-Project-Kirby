@@ -35,8 +35,10 @@ class Boss:
         else:
             self.image.clip_composite_draw(int(self.frame) * 66, 700, 68, 100, 0, 'h', screen_x, self.y, 300, 300)
 
+        draw_rectangle(*self.get_bb())
+
     def get_bb(self):
-        pass
+        return self.x -100, self.y - 130, self.x + 100, self.y + 100
 
     def handle_collision(self, group, other):
         pass
