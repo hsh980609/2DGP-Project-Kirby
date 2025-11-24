@@ -2,6 +2,11 @@ from pico2d import *
 import game_framework
 import game_world
 
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+IDLE_FRAMES_PER_ACTION = 4
+
+
 class Boss:
     image = None
     def __init__(self):
@@ -12,8 +17,6 @@ class Boss:
         self.frame = 0
         self.dir = 1
         self.target = None
-
-        pass
 
     def update(self):
        pass
@@ -30,4 +33,37 @@ class Boss:
         pass
 
     def handle_collision(self, group, other):
+        pass
+
+
+    def set_target_location(self, x=None, y=None):
+        pass
+
+    def distance_less_than(self, x1, y1, x2, y2, r): # r은 미터단위.
+        pass
+
+    def move_little_to(self, tx, ty):
+        pass
+
+
+    def move_to(self, r=0.5):
+        pass
+
+    def set_random_location(self):
+        pass
+
+
+    def is_boy_nearby(self, distance):
+        pass
+
+
+    def move_to_boy(self, r=0.5):
+        pass
+
+
+    def get_patrol_location(self):
+        pass
+
+
+    def build_behavior_tree(self):
         pass
