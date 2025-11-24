@@ -8,7 +8,7 @@ class Boss:
         if Boss.image == None:
             Boss.image = load_image('Boss.png')
 
-        self.x, self.y = 400, 100
+        self.x, self.y = 400, 200
         self.frame = 0
         self.dir = 1
         self.target = None
@@ -22,9 +22,9 @@ class Boss:
         screen_x = self.x - offset_x
 
         if self.dir == 1:
-            self.image.clip_draw(0, 700, 100, 100, screen_x, self.y, 100, 100)
+            self.image.clip_draw(0, 700, 68, 100, screen_x, self.y, 300, 300)
         else:
-            self.image.clip_composite_draw(0, 700, 100, 100, 0, 'h', screen_x, self.y, 100, 100)
+            self.image.clip_composite_draw(0, 700, 68, 100, 0, 'h', screen_x, self.y, 300, 300)
 
     def get_bb(self):
         pass
