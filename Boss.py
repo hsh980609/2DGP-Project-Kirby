@@ -153,8 +153,26 @@ class Boss:
         else:
             return BehaviorTree.FAIL
 
-    def walk_to_kirby(self):
-        pass
+    def walk_to_kirby(self,r=0.5):
+        if self.target is None:
+            return BehaviorTree.FAIL
+
+        self.state ='Walk'
+        dx = self.target.x - self.x
+        dy = self.target.y - self.y
+        dist = math.sqrt(dx**2 + dy**2)
+
+        if dx > 0:
+            self.dir = 1
+        else:
+            self.dir = -1
+
+        if dist < r:
+            return BehaviorTree.SUCCESS
+
+        self.x += (dx / dist)*RUN_SPEED_PPS*game_framework.frame_time
+        #self.y += (dy / dist) * RUN_SPEED_PPS * game_framework.frame_time
+        return BehaviorTree.RUNNING
     def jump_to_kirby(self):
         pass
     def shout_to_kirby(self):
@@ -180,28 +198,6 @@ class Boss:
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
-
-
-    def move_to_kirby(self, r=0.5):
-        if self.target is None:
-            return BehaviorTree.FAIL
-
-        self.state ='Walk'
-        dx = self.target.x - self.x
-        dy = self.target.y - self.y
-        dist = math.sqrt(dx**2 + dy**2)
-
-        if dx > 0:
-            self.dir = 1
-        else:
-            self.dir = -1
-
-        if dist < r:
-            return BehaviorTree.SUCCESS
-
-        self.x += (dx / dist)*RUN_SPEED_PPS*game_framework.frame_time
-        #self.y += (dy / dist) * RUN_SPEED_PPS * game_framework.frame_time
-        return BehaviorTree.RUNNING
 
 
     def get_patrol_location(self):
