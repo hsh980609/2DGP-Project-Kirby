@@ -30,6 +30,8 @@ class Boss:
         self.frame = 0
         self.dir = 1
         self.attack_timer = 0
+        self.pattern =0
+        self.pattern_timer=0
         self.target = None
         self.state = 'Idle'
 
@@ -47,6 +49,12 @@ class Boss:
         total_frames = self.state_animation[self.state]['frames']
         self.frame = (self.frame + total_frames * ACTION_PER_TIME * game_framework.frame_time) % total_frames
         self.bt.run()
+
+        self.pattern_timer +=game_framework.frame_time
+        if self.pattern_timer >3.0:# 3초 마다 패턴 변경
+            self.pattern = random.randint(0,2)
+            self.pattern_timer = 0
+            print("패턴 변경: {self.pattern}")
 
         # 중력을 적용
         self.y += self.y_velocity * game_framework.frame_time
@@ -128,11 +136,22 @@ class Boss:
         return BehaviorTree.RUNNING
 
     def pattern_walk(self):
-        pass
+        if self.pattern == 0:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
     def pattern_jump(self):
-        pass
+        if self.pattern == 1:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
     def pattern_shout(self):
-        pass
+        if self.pattern == 2:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
 
     def walk_to_kirby(self):
         pass
