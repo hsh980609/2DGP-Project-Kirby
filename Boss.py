@@ -26,16 +26,23 @@ class Boss:
 
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
-        self.x, self.y = 400, 200
+        self.x, self.y = 700, 200
         self.frame = 0
         self.dir = 1
         self.target = None
         self.state = 'Idle'
 
+        self.state_animation = {
+            'Idle':{'y':700,'frames':4,'w':66,'h':100},
+            'Walk':{'y':535,'frames':4,'w':66,'h':90},
+            'Attack':{'y':450,'frames':2,'w':66,'h':100},
+        }
+
         self.build_behavior_tree()
 
     def update(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
+        total_frames = self.state_animation[self.state]['frames']
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % total_frames
         self.bt.run()
 
         # 중력을 적용
@@ -45,10 +52,15 @@ class Boss:
     def draw(self, offset_x=0):  # offset_x 추가
         screen_x = self.x - offset_x
 
+        state_animation = self.state_animation[self.state]
+        sprite_y = state_animation['y']
+        sprite_w = state_animation['w']
+        sprite_h = state_animation['h']
+
         if self.dir == 1:
-            self.image.clip_draw(int(self.frame) * 66, 700, 68, 100, screen_x, self.y, 300, 300)
+            self.image.clip_draw(int(self.frame) * sprite_w, sprite_y, sprite_w, sprite_h, screen_x, self.y, 300, 300)
         else:
-            self.image.clip_composite_draw(int(self.frame) * 66, 700, 68, 100, 0, 'h', screen_x, self.y, 300, 300)
+            self.image.clip_composite_draw(int(self.frame) * sprite_w, sprite_y, sprite_w, sprite_h, 0, 'h', screen_x, self.y, 300, 300)
 
         draw_rectangle(*self.get_bb())
 
