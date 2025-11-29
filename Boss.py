@@ -31,6 +31,9 @@ class Boss:
         self.dir = 1
         self.attack_timer = 0
         self.pattern =0
+        self.is_thinking = False  # 생각 중인지 체크하는 플래그
+        self.think_timer = 0
+        self.shout_timer=0
         self.target = None
         self.state = 'Idle'
 
@@ -143,6 +146,7 @@ class Boss:
 
         if self.attack_timer > 1.0:
             self.attack_timer = 0  # 타이머 초기화
+            self.is_thinking = True
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
 
@@ -167,7 +171,7 @@ class Boss:
             self.dir = -1
 
         if dist < r:
-            self.pattern = random.randint(0, 2)
+            self.is_thinking = True
             return BehaviorTree.SUCCESS
 
         self.x += (dx / dist)*RUN_SPEED_PPS*game_framework.frame_time
@@ -190,7 +194,7 @@ class Boss:
         if self.y_velocity == 0:
             self.y_velocity = 800  # 점프력 (원하는 높이만큼 조절)
         if dist < r:
-            self.pattern=random.randint(0,2)
+            self.is_thinking = True
             return BehaviorTree.SUCCESS
 
         self.x += self.dir*RUN_SPEED_PPS*game_framework.frame_time
@@ -203,17 +207,9 @@ class Boss:
         # (몬스터 소환 로직)
         if self.shout_timer > 1.5:
             self.shout_timer = 0
-            self.pattern = random.randint(0, 2)
+            self.is_thinking = True
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
-
-
-    def move_to(self, r=0.5):
-        pass
-
-    def set_random_location(self):
-        pass
-
 
     def is_kirby_nearby(self, distance):
         if self.target is None:
@@ -228,13 +224,21 @@ class Boss:
         else:
             return BehaviorTree.FAIL
 
-
-    def get_patrol_location(self):
-        pass
     def check_thinking(self):
-        pass
+        if self.is_thinking:
+            return BehaviorTree.SUCCESS
+        else:
+            return  BehaviorTree.FAIL
     def do_think(self):
-        pass
+        self.state = 'Idle'
+        self.think_timer +=game_framework.frame_time
+        if self.think_timer >1.0:
+            self.think_timer=0
+            self.pattern=random.randint(0,2)
+            print(f"생각 끝. 다음패턴: {self.pattern}")
+            self.is_thinking=False
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
 
 
     def build_behavior_tree(self):
