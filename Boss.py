@@ -22,6 +22,7 @@ class Boss:
     def __init__(self):
         if Boss.image == None:
             Boss.image = load_image('Boss.png')
+        self.Boss_2_image =load_image('Boss_2.png')
 
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
@@ -42,6 +43,9 @@ class Boss:
                       },
             'Jump':{'frames': 3,
                       'sprite':[(0,400,80,100),(80,400,80,100),(160,435,75,100)]
+                      },
+            'Shout':{'frames': 2,
+                      'sprite':[(245,110,55,90),(300,110,55,90)]
                       },
         }
 
@@ -73,11 +77,12 @@ class Boss:
 
         state_animation = self.state_animation[self.state]
         idx = int(self.frame)
-        if self.state == 'Attack':
-            if idx >= len(state_animation['sprite']):
-                idx = len(state_animation['sprite']) - 1
-            sprite_x,sprite_y,sprite_w,sprite_h = state_animation['sprite'][idx]
-        elif self.state == 'Jump':
+
+        if self.state == 'Shout':
+            target_image = self.Boss_2_image
+        else:
+            target_image = self.image
+        if self.state in['Attack','Jump','Shout'] :
             if idx >= len(state_animation['sprite']):
                 idx = len(state_animation['sprite']) - 1
             sprite_x,sprite_y,sprite_w,sprite_h = state_animation['sprite'][idx]
@@ -89,9 +94,9 @@ class Boss:
 
 
         if self.dir == 1:
-            self.image.clip_draw(sprite_x, sprite_y, sprite_w, sprite_h, screen_x, self.y, 300, 300)
+            target_image.clip_draw(sprite_x, sprite_y, sprite_w, sprite_h, screen_x, self.y, 300, 300)
         else:
-            self.image.clip_composite_draw(sprite_x, sprite_y, sprite_w, sprite_h, 0, 'h', screen_x, self.y, 300, 300)
+            target_image.clip_composite_draw(sprite_x, sprite_y, sprite_w, sprite_h, 0, 'h', screen_x, self.y, 300, 300)
 
         draw_rectangle(*self.get_bb())
         draw_circle(screen_x, self.y, 200,255,255,255)
@@ -209,7 +214,8 @@ class Boss:
         return BehaviorTree.RUNNING
 
     def shout_to_kirby(self):
-        pass
+        self.state = 'Shout'
+        return BehaviorTree.RUNNING
 
 
     def move_to(self, r=0.5):
