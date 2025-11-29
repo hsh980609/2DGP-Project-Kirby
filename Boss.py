@@ -5,7 +5,6 @@ import math
 import game_framework
 import game_world
 from behavior_tree import BehaviorTree, Action, Sequence, Condition, Selector
-from kirby import Kirby
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 10.0  # Km / Hour
@@ -50,6 +49,12 @@ class Boss:
 
     def update(self):
         total_frames = self.state_animation[self.state]['frames']
+        if self.state == 'Jump':
+            if self.y_velocity > 0:
+                self.frame = 1  # 올라갈 때 (2번째 프레임)
+            else:
+                self.frame = 2  # 내려갈 때 (3번째 프레임)
+
         self.frame = (self.frame + total_frames * ACTION_PER_TIME * game_framework.frame_time) % total_frames
         self.bt.run()
 
@@ -195,11 +200,12 @@ class Boss:
         else:
             self.dir = -1
 
+        if self.y_velocity == 0:
+            self.y_velocity = 800  # 점프력 (원하는 높이만큼 조절)
         if dist < r:
             return BehaviorTree.SUCCESS
 
-        self.x += (dx / dist)*RUN_SPEED_PPS*game_framework.frame_time
-        self.y += (dy / dist) * RUN_SPEED_PPS * game_framework.frame_time
+        self.x += self.dir*RUN_SPEED_PPS*game_framework.frame_time
         return BehaviorTree.RUNNING
 
     def shout_to_kirby(self):
