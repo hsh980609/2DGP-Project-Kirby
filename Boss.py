@@ -29,20 +29,23 @@ class Boss:
         self.x, self.y = 700, 200
         self.frame = 0
         self.dir = 1
+        self.attack_timer = 0
         self.target = None
         self.state = 'Idle'
 
         self.state_animation = {
             'Idle':{'y':700,'frames':4,'w':66,'h':100},
             'Walk':{'y':535,'frames':4,'w':66,'h':90},
-            'Attack':{'y':450,'frames':2,'w':66,'h':100},
+            'Attack':{'frames': 2,
+                      'sprite':[(160,435,75,100),(225,400,90,100)]
+                      },
         }
 
         self.build_behavior_tree()
 
     def update(self):
         total_frames = self.state_animation[self.state]['frames']
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % total_frames
+        self.frame = (self.frame + total_frames * ACTION_PER_TIME * game_framework.frame_time) % total_frames
         self.bt.run()
 
         # 중력을 적용
@@ -53,16 +56,25 @@ class Boss:
         screen_x = self.x - offset_x
 
         state_animation = self.state_animation[self.state]
-        sprite_y = state_animation['y']
-        sprite_w = state_animation['w']
-        sprite_h = state_animation['h']
+        idx = int(self.frame)
+        if self.state == 'Attack':
+            if idx >= len(state_animation['sprite']):
+                idx = len(state_animation['sprite']) - 1
+            sprite_x,sprite_y,sprite_w,sprite_h = state_animation['sprite'][idx]
+        else:
+            sprite_x = idx * state_animation['w']
+            sprite_y = state_animation['y']
+            sprite_w = state_animation['w']
+            sprite_h = state_animation['h']
+
 
         if self.dir == 1:
-            self.image.clip_draw(int(self.frame) * sprite_w, sprite_y, sprite_w, sprite_h, screen_x, self.y, 300, 300)
+            self.image.clip_draw(sprite_x, sprite_y, sprite_w, sprite_h, screen_x, self.y, 300, 300)
         else:
-            self.image.clip_composite_draw(int(self.frame) * sprite_w, sprite_y, sprite_w, sprite_h, 0, 'h', screen_x, self.y, 300, 300)
+            self.image.clip_composite_draw(sprite_x, sprite_y, sprite_w, sprite_h, 0, 'h', screen_x, self.y, 300, 300)
 
         draw_rectangle(*self.get_bb())
+        draw_circle(screen_x, self.y, 200,255,255,255)
 
     def get_bb(self):
         return self.x -100, self.y - 130, self.x + 100, self.y + 100
@@ -93,6 +105,27 @@ class Boss:
 
     def move_little_to(self, tx, ty):
         pass
+    def kirby_in_atk_range(self, r):
+        if self.target is None:
+            return BehaviorTree.FAIL
+
+        dx = self.target.x - self.x
+        dy = self.target.y - self.y
+        dist = dx ** 2 + dy ** 2
+
+        if dist < r**2:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
+    def atk_kirby(self):
+        self.state = 'Attack'
+        self.attack_timer += game_framework.frame_time
+
+        if self.attack_timer > 1.0:
+            self.attack_timer = 0  # 타이머 초기화
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
 
 
     def move_to(self, r=0.5):
@@ -143,11 +176,16 @@ class Boss:
 
 
     def build_behavior_tree(self):
-        # 커비가 1000픽셀 화면안에 있는가?
+        # 커비가 1000픽셀 화면안에 있는가? -> 추적
         c1 = Condition('Is Kirby Nearby',self.is_kirby_nearby,1000)
-        # 액션: 커비 추격
         a1 =Action('Move to Kirby',self.move_to_kirby)
+        chase_seq =Sequence("Chase kirby",c1,a1)
+        # 커비가 공격범위에 있는가? -> 공격
+        c2 = Condition('Kirby in atk range',self.kirby_in_atk_range,200)
+        a2 = Action('Attack',self.atk_kirby)
+        atk_seq = Sequence('Attack Sequence',c2,a2)
 
-        root = Sequence("Chase kirby",c1,a1)
+
+        root = Selector('Boss Logic',atk_seq,chase_seq)
         self.bt = BehaviorTree(root)
 
