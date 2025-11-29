@@ -41,6 +41,9 @@ class Boss:
             'Attack':{'frames': 2,
                       'sprite':[(160,435,75,100),(225,400,90,100)]
                       },
+            'Jump':{'frames': 3,
+                      'sprite':[(0,400,80,100),(80,400,80,100),(160,435,75,100)]
+                      },
         }
 
         self.build_behavior_tree()
@@ -66,6 +69,10 @@ class Boss:
         state_animation = self.state_animation[self.state]
         idx = int(self.frame)
         if self.state == 'Attack':
+            if idx >= len(state_animation['sprite']):
+                idx = len(state_animation['sprite']) - 1
+            sprite_x,sprite_y,sprite_w,sprite_h = state_animation['sprite'][idx]
+        elif self.state == 'Jump':
             if idx >= len(state_animation['sprite']):
                 idx = len(state_animation['sprite']) - 1
             sprite_x,sprite_y,sprite_w,sprite_h = state_animation['sprite'][idx]
@@ -173,8 +180,28 @@ class Boss:
         self.x += (dx / dist)*RUN_SPEED_PPS*game_framework.frame_time
         #self.y += (dy / dist) * RUN_SPEED_PPS * game_framework.frame_time
         return BehaviorTree.RUNNING
-    def jump_to_kirby(self):
-        pass
+
+    def jump_to_kirby(self,r =0.5):
+        if self.target is None:
+            return BehaviorTree.FAIL
+
+        self.state ='Jump'
+        dx = self.target.x - self.x
+        dy = self.target.y - self.y
+        dist = math.sqrt(dx**2 + dy**2)
+
+        if dx > 0:
+            self.dir = 1
+        else:
+            self.dir = -1
+
+        if dist < r:
+            return BehaviorTree.SUCCESS
+
+        self.x += (dx / dist)*RUN_SPEED_PPS*game_framework.frame_time
+        self.y += (dy / dist) * RUN_SPEED_PPS * game_framework.frame_time
+        return BehaviorTree.RUNNING
+
     def shout_to_kirby(self):
         pass
 
