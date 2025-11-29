@@ -231,6 +231,10 @@ class Boss:
 
     def get_patrol_location(self):
         pass
+    def check_thinking(self):
+        pass
+    def do_think(self):
+        pass
 
 
     def build_behavior_tree(self):
@@ -256,10 +260,15 @@ class Boss:
 
         Pattern_Selector = Selector('Pattern Select',seq_walk,seq_jump,seq_shout)
 
+        # Think Sequence
+        c_think = Condition('Think?',self.check_thinking)
+        a_think = Action('Think & Reset',self.do_think)
+        seq_think = Sequence('Think Seq',c_think,a_think)
+
         # Chase Sequence
         c_nearby = Condition('Is Kirby Nearby',self.is_kirby_nearby,1000)
         seq_chase =Sequence("Chase Sequence",c_nearby,Pattern_Selector)
 
-        root = Selector('Root',seq_atk,seq_chase)
+        root = Selector('Root',seq_atk,seq_think,seq_chase)
         self.bt = BehaviorTree(root)
 
