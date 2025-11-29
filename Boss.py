@@ -24,7 +24,8 @@ class Boss:
         if Boss.image == None:
             Boss.image = load_image('Boss.png')
 
-
+        self.y_velocity = 0.0
+        self.gravity = 1000.0 # 중력
         self.x, self.y = 400, 200
         self.frame = 0
         self.dir = 1
@@ -37,6 +38,9 @@ class Boss:
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
         self.bt.run()
 
+        # 중력을 적용
+        self.y += self.y_velocity * game_framework.frame_time
+        self.y_velocity -= self.gravity * game_framework.frame_time
 
     def draw(self, offset_x=0):  # offset_x 추가
         screen_x = self.x - offset_x
@@ -52,7 +56,21 @@ class Boss:
         return self.x -100, self.y - 130, self.x + 100, self.y + 100
 
     def handle_collision(self, group, other):
-        pass
+        if group == 'boss:ground':
+            kl, kb, kr, kt = self.get_bb()
+            gl, gb, gr, gt = other.get_bb()
+
+            # 충돌 깊이 계산
+            collision_l = kr - gl
+            collision_r = gr - kl
+            collision_b = gt - kb
+
+            min_collision = min(collision_l, collision_r, collision_b)
+
+            # 바닥밟음 - 보스룸에서는 바닥과의 충돌 처리만 계산해도 됌.
+            if min_collision == collision_b:
+                self.y += collision_b  # 뚫고 들어간 만큼 위로 밀어올림
+                self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)
 
 
     def set_target_location(self, x=None, y=None):
@@ -78,9 +96,9 @@ class Boss:
 
         dx = self.target.x - self.x
         dy = self.target.y - self.y
-        dist = math.sqrt(dx ** 2 + dy ** 2)
+        dist = dx ** 2 + dy ** 2
 
-        if dist < distance:
+        if dist < distance**2:
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
@@ -104,7 +122,7 @@ class Boss:
             return BehaviorTree.SUCCESS
 
         self.x += (dx / dist)*RUN_SPEED_PPS*game_framework.frame_time
-        self.y += (dy / dist) * RUN_SPEED_PPS * game_framework.frame_time
+        #self.y += (dy / dist) * RUN_SPEED_PPS * game_framework.frame_time
         return BehaviorTree.RUNNING
 
 
@@ -120,4 +138,4 @@ class Boss:
 
         root = Sequence("Chase kirby",c1,a1)
         self.bt = BehaviorTree(root)
-        pass
+

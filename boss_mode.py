@@ -28,6 +28,7 @@ def init():
     game_world.add_objects(grounds, 1)
     for ground in grounds:
         game_world.add_collision_pair('kirby:ground', kirby, ground)
+        game_world.add_collision_pair('boss:ground', boss, ground)
 
 
 def finish():
