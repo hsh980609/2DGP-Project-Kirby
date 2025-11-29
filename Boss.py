@@ -127,6 +127,20 @@ class Boss:
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
 
+    def pattern_walk(self):
+        pass
+    def pattern_jump(self):
+        pass
+    def pattern_shout(self):
+        pass
+
+    def walk_to_kirby(self):
+        pass
+    def jump_to_kirby(self):
+        pass
+    def shout_to_kirby(self):
+        pass
+
 
     def move_to(self, r=0.5):
         pass
