@@ -31,7 +31,6 @@ class Boss:
         self.dir = 1
         self.attack_timer = 0
         self.pattern =0
-        self.pattern_timer=0
         self.target = None
         self.state = 'Idle'
 
@@ -61,12 +60,6 @@ class Boss:
 
         self.frame = (self.frame + total_frames * ACTION_PER_TIME * game_framework.frame_time) % total_frames
         self.bt.run()
-
-        self.pattern_timer +=game_framework.frame_time
-        if self.pattern_timer >3.0:# 3초 마다 패턴 변경
-            self.pattern = random.randint(0, 2)
-            self.pattern_timer = 0
-            print("패턴 변경: {self.pattern}")
 
 
         # 중력을 적용
@@ -159,7 +152,6 @@ class Boss:
         else:
             return BehaviorTree.FAIL
 
-
     def walk_to_kirby(self,r=0.5):
         if self.target is None:
             return BehaviorTree.FAIL
@@ -175,10 +167,10 @@ class Boss:
             self.dir = -1
 
         if dist < r:
+            self.pattern = random.randint(0, 2)
             return BehaviorTree.SUCCESS
 
         self.x += (dx / dist)*RUN_SPEED_PPS*game_framework.frame_time
-        #self.y += (dy / dist) * RUN_SPEED_PPS * game_framework.frame_time
         return BehaviorTree.RUNNING
 
     def jump_to_kirby(self,r =0.5):
@@ -198,6 +190,7 @@ class Boss:
         if self.y_velocity == 0:
             self.y_velocity = 800  # 점프력 (원하는 높이만큼 조절)
         if dist < r:
+            self.pattern=random.randint(0,2)
             return BehaviorTree.SUCCESS
 
         self.x += self.dir*RUN_SPEED_PPS*game_framework.frame_time
@@ -205,6 +198,13 @@ class Boss:
 
     def shout_to_kirby(self):
         self.state = 'Shout'
+        self.shout_timer += game_framework.frame_time
+
+        # (몬스터 소환 로직)
+        if self.shout_timer > 1.5:
+            self.shout_timer = 0
+            self.pattern = random.randint(0, 2)
+            return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
 
 
