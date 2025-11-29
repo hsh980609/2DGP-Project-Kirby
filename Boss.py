@@ -64,9 +64,10 @@ class Boss:
 
         self.pattern_timer +=game_framework.frame_time
         if self.pattern_timer >3.0:# 3초 마다 패턴 변경
-            self.pattern = random.randint(0,2)
+            self.pattern = random.randint(0, 2)
             self.pattern_timer = 0
             print("패턴 변경: {self.pattern}")
+
 
         # 중력을 적용
         self.y += self.y_velocity * game_framework.frame_time
@@ -152,23 +153,12 @@ class Boss:
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
 
-    def pattern_walk(self):
-        if self.pattern == 0:
+    def Check_pattern(self,pattern):
+        if self.pattern == pattern:
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
 
-    def pattern_jump(self):
-        if self.pattern == 1:
-            return BehaviorTree.SUCCESS
-        else:
-            return BehaviorTree.FAIL
-
-    def pattern_shout(self):
-        if self.pattern == 2:
-            return BehaviorTree.SUCCESS
-        else:
-            return BehaviorTree.FAIL
 
     def walk_to_kirby(self,r=0.5):
         if self.target is None:
@@ -250,17 +240,17 @@ class Boss:
         seq_atk = Sequence('Attack Sequence', c1, a1)
 
         # walk
-        c_pattern_0 = Condition('Pattern 0?',self.pattern_walk)
+        c_pattern_0 = Condition('Pattern 0?',self.Check_pattern,0)
         a_walk = Action('Walk',self.walk_to_kirby)
         seq_walk = Sequence('Walk Sequence',c_pattern_0,a_walk)
 
         # Jump
-        c_pattern_1 = Condition('Pattern 1?', self.pattern_jump)
+        c_pattern_1 = Condition('Pattern 1?', self.Check_pattern,1)
         a_jump = Action('Jump', self.jump_to_kirby)
         seq_jump = Sequence('Jump Sequence', c_pattern_1, a_jump)
 
         # Shout
-        c_pattern_2 = Condition('Pattern 2?', self.pattern_shout)
+        c_pattern_2 = Condition('Pattern 2?', self.Check_pattern,2)
         a_shout = Action('Shout', self.shout_to_kirby)
         seq_shout = Sequence('Shout Sequence', c_pattern_2, a_shout)
 
