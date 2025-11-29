@@ -20,6 +20,7 @@ def init():
 
     boss = Boss()
     game_world.add_object(boss, 2)
+    boss.target = kirby
 
     grounds = [
         Ground(400, 35, 800, 70),
