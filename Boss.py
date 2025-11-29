@@ -176,16 +176,32 @@ class Boss:
 
 
     def build_behavior_tree(self):
-        # 커비가 1000픽셀 화면안에 있는가? -> 추적
-        c1 = Condition('Is Kirby Nearby',self.is_kirby_nearby,1000)
-        a1 =Action('Move to Kirby',self.move_to_kirby)
-        chase_seq =Sequence("Chase kirby",c1,a1)
         # 커비가 공격범위에 있는가? -> 공격
-        c2 = Condition('Kirby in atk range',self.kirby_in_atk_range,200)
-        a2 = Action('Attack',self.atk_kirby)
-        atk_seq = Sequence('Attack Sequence',c2,a2)
+        c1 = Condition('Kirby in atk range', self.kirby_in_atk_range, 200)
+        a1 = Action('Attack', self.atk_kirby)
+        seq_atk = Sequence('Attack Sequence', c1, a1)
 
+        # walk
+        c_pattern_0 = Condition('Pattern 0?',self.pattern_walk)
+        a_walk = Action('Walk',self.walk_to_kirby)
+        seq_walk = Sequence('Walk Sequence',c_pattern_0,a_walk)
 
-        root = Selector('Boss Logic',atk_seq,chase_seq)
+        # Jump
+        c_pattern_1 = Condition('Pattern 1?', self.pattern_jump)
+        a_jump = Action('Jump', self.jump_to_kirby)
+        seq_jump = Sequence('Jump Sequence', c_pattern_1, a_jump)
+
+        # Shout
+        c_pattern_2 = Condition('Pattern 2?', self.pattern_shout)
+        a_shout = Action('Shout', self.shout_to_kirby)
+        seq_shout = Sequence('Shout Sequence', c_pattern_2, a_shout)
+
+        Pattern_Selector = Selector('Pattern Select',seq_walk,seq_jump,seq_shout)
+
+        # Chase Sequence
+        c_nearby = Condition('Is Kirby Nearby',self.is_kirby_nearby,1000)
+        seq_chase =Sequence("Chase Sequence",c_nearby,Pattern_Selector)
+
+        root = Selector('Root',seq_atk,seq_chase)
         self.bt = BehaviorTree(root)
 
