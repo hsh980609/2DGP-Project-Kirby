@@ -418,6 +418,7 @@ class Kirby:
         star = Star(self.x, self.y,self.face_dir)
 
         game_world.add_collision_pair('star:monster',None, star)
+        game_world.add_collision_pair('star:boss', None, star)
 
     def get_bb(self):
         return self.x -35, self.y - 30, self.x + 40, self.y + 40
@@ -463,6 +464,14 @@ class Kirby:
                 self.x -= collision_l  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
             elif min_collision == collision_r:
                 self.x += collision_r  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
+        elif group == 'kirby:boss':
+            if self.knockback_timer <= 0:
+                print("커비 보스 충돌")
+                self.knockback_timer = 0.5
+                if self.x < other.x:
+                    self.dir = -1
+                else:
+                    self.dir = 1
 
 
     def handle_event(self, event):

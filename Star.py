@@ -29,7 +29,6 @@ class Star:
 
         l, b, r, t = self.get_bb()
         draw_rectangle(l - offset_x, b, r - offset_x, t)
-        # draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x += self.dir * STAR_SPEED_PPS * game_framework.frame_time
@@ -44,6 +43,6 @@ class Star:
         if group == 'star:monster':
             print('충돌!')
             game_world.remove_object(self)
-        elif group == 1:
-            pass
-        pass
+        elif group == 'star:boss':
+            game_world.remove_object(self)
+
