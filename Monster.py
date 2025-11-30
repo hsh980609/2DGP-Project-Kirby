@@ -140,9 +140,12 @@ class Monster:
             collision_b = gt - kb
 
             min_collision = min(collision_l, collision_r, collision_b)
-
-            # 바닥밟음
             if min_collision == collision_b:
                 self.y += collision_b  # 뚫고 들어간 만큼 위로 밀어올림
-                self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)
-            pass
+                self.y_velocity = 0
+            elif min_collision == collision_l:
+                self.x -= collision_l  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
+                self.dir = -1 # 충돌시 방향전환
+            elif min_collision == collision_r:
+                self.x += collision_r  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
+                self.dir = 1  # 충돌시 방향전환

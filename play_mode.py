@@ -66,14 +66,23 @@ def init():
     kirby = Kirby()
     game_world.add_object(kirby, 2)
 
-    monster = Monster(400,120)
-    game_world.add_object(monster, 2)
+    monsters=[
+        Monster(-300, 120),
+        Monster(100, 120),
+        Monster(250, 120),
+        Monster(1000, 120),
+    ]
+    game_world.add_objects(monsters, 2)
 
-    game_world.add_collision_pair('star:monster', monster, None)
-    game_world.add_collision_pair('kirby:monster', kirby, monster)
-    game_world.add_collision_pair('suction:monster', kirby.SUCTION,monster)
+    for monster in monsters:
+        game_world.add_collision_pair('star:monster', monster, None)
+        game_world.add_collision_pair('kirby:monster', kirby, monster)
+        game_world.add_collision_pair('suction:monster', kirby.SUCTION, monster)
+        game_world.add_collision_pair('monster:ground', monster, None)
+
     for ground in grounds:
         game_world.add_collision_pair('kirby:ground', kirby, ground)
+        game_world.add_collision_pair('monster:ground', None, ground)
 
 
 def update():
