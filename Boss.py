@@ -28,7 +28,7 @@ class Boss:
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
         self.x, self.y = 700, 200
-        self.hp = 5
+        self.hp = 0
         self.frame = 0
         self.dir = 1
         self.font = load_font('ENCR10B.TTF', 16)
@@ -56,6 +56,9 @@ class Boss:
                       'sprite':[(245,110,55,90),(300,110,55,90)]
                       },
             'Hit':{'y':622,'frames':1,'w':66,'h':80},
+            'Death':{'frames': 2,
+                      'sprite':[(685,110,55,90),(740,110,55,90)]
+                      },
         }
 
         self.build_behavior_tree()
@@ -63,8 +66,7 @@ class Boss:
     def update(self):
         if self.hp <= 0:
             print("보스 체력 0. 보스 사망")
-            game_world.remove_object(self)
-            return
+            self.state = 'Death'
 
         if self.state == 'Hit':
             self.hit_timer += game_framework.frame_time
@@ -73,7 +75,8 @@ class Boss:
                 self.hit_timer = 0
                 self.state = 'Idle'
                 self.is_thinking = True  # 맞았으니 잠깐 생각
-
+        elif self.state == 'Death':
+            pass
         else:
             # Hit가 아닐 때만 행동 트리 실행
             self.bt.run()
@@ -96,11 +99,12 @@ class Boss:
         state_animation = self.state_animation[self.state]
         idx = int(self.frame)
 
-        if self.state == 'Shout':
+        if self.state in['Shout','Death'] :
             target_image = self.Boss_2_image
         else:
             target_image = self.image
-        if self.state in['Attack','Jump','Shout'] :
+
+        if self.state in['Attack','Jump','Shout','Death'] :
             if idx >= len(state_animation['sprite']):
                 idx = len(state_animation['sprite']) - 1
             sprite_x,sprite_y,sprite_w,sprite_h = state_animation['sprite'][idx]
