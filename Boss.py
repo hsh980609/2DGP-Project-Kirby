@@ -28,7 +28,7 @@ class Boss:
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
         self.x, self.y = 700, 200
-        self.hp = 0
+        self.hp = 5
         self.frame = 0
         self.dir = 1
         self.font = load_font('ENCR10B.TTF', 16)
@@ -139,7 +139,7 @@ class Boss:
 
             min_collision = min(collision_l, collision_r, collision_b)
 
-            # 바닥밟음 - 보스룸에서는 바닥과의 충돌 처리만 계산해도 됌.
+            # 바닥밟음 - 보스룸에서는 바닥과의 충돌 처리만 계산해도 됨.
             if min_collision == collision_b:
                 self.y += collision_b  # 뚫고 들어간 만큼 위로 밀어올림
                 self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)

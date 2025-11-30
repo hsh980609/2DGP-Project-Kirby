@@ -75,6 +75,7 @@ RUN_STOP_FRAMES_PER_ACTION = 1
 JUMP_FRAMES_PER_ACTION = 10
 FLY_FRAMES_PER_ACTION = 6
 SUCTION_FRAMES_PER_ACTION = 5
+SWALLOWED_FRAMES_PER_ACTION = 2
 
 MAP_CEILING_Y = 600.0 # 맵 천장
 MAP_FLOOR_Y = 100.0 # 맵 바닥.
@@ -342,9 +343,32 @@ class Suction:
             if self.Kirby.state_machine.cur_state == self:
                 print("커비가 빨아들이는 중")
 
+class Swallowed:
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
+
+    def enter(self, e):
+        self.Kirby.dir=0
+        self.Kirby.frame=0
+
+    def do(self):
+        self.Kirby.frame = (self.Kirby.frame + SWALLOWED_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
+
+
+    def exit(self,e):
+        pass
+
+
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 30, 2734, 30, 30, screen_x, self.Kirby.y,100,100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 30, 2734, 30, 30, 0,'h', screen_x, self.Kirby.y,100,100)
+
 class Kirby:
     def __init__(self):
-        self.x, self.y = 1800, 100 # -900
+        self.x, self.y = -900, 100 # -900 / 1800x
         self.y_start = 0
 
         self.frame = 0
@@ -371,6 +395,7 @@ class Kirby:
         self.FLY = Fly(self)
         self.SUCTION = Suction(self)
         self.JUMP = Jump(self)
+        self.SWALLOWED = Swallowed(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -381,8 +406,9 @@ class Kirby:
                 self.RUN :{x_down: self.JUMP, right_up: self.RUN_STOP, left_up: self.RUN_STOP,},
                 self.RUN_STOP :{time_out: self.IDLE},
                 self.JUMP:{c_down: self.FLY},
-                self.SUCTION:{z_up: self.IDLE},
-                self.FLY:{c_up: self.JUMP}
+                self.SUCTION:{z_up: self.IDLE},#충돌처리되면 swallowed로
+                self.FLY:{c_up: self.JUMP},
+                self.SWALLOWED:{z_down:self.IDLE}
 
              }
         )
@@ -434,9 +460,9 @@ class Kirby:
             # 석션 상태라면 몬스터 삼켜짐 처리
             if self.state_machine.cur_state == self.SUCTION:
                 print('몬스터 삼킴')
+                #여기서 Swallowed 상태로 변경
+                self.state_machine.change_state(self.SWALLOWED,('SWALLOWED',None))
                 self.star_bullet = True # 쏠수있음
-                # 두번 삭제하면 안됨
-                #game_world.remove_object(other)
             elif self.knockback_timer <= 0:
                 print("커비 몬스터 충돌")
                 self.hp -= 1
