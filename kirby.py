@@ -76,6 +76,7 @@ JUMP_FRAMES_PER_ACTION = 10
 FLY_FRAMES_PER_ACTION = 6
 SUCTION_FRAMES_PER_ACTION = 5
 SWALLOWED_FRAMES_PER_ACTION = 2
+SHOOT_FRAMES_PER_ACTION = 5
 
 MAP_CEILING_Y = 600.0 # 맵 천장
 MAP_FLOOR_Y = 100.0 # 맵 바닥.
@@ -315,10 +316,7 @@ class Suction:
             self.Kirby.frame = 4
 
     def exit(self, e):
-        if self.Kirby.star_bullet == True:
-            self.Kirby.fire_star()
-            self.Kirby.star_bullet = False #초기화
-
+        pass
 
     def draw(self,offset_x):
         screen_x = self.Kirby.x - offset_x
@@ -347,9 +345,11 @@ class Swallowed:
     def __init__(self, Kirby):
         self.Kirby = Kirby
 
+
     def enter(self, e):
         self.Kirby.dir=0
         self.Kirby.frame=0
+        self.Kirby.star_bullet = True  # 쏠수있음
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + SWALLOWED_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
@@ -393,6 +393,37 @@ class Swallowed_Walk:
             self.Kirby.image.clip_draw(int(self.Kirby.frame) * 29, 2670, 29, 30, screen_x, self.Kirby.y, 100, 100)
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 29, 2670, 29, 30, 0, 'h', screen_x,self.Kirby.y, 100, 100)
+
+class Shoot:
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
+
+    def enter(self, e):
+        self.Kirby.dir=0
+        self.Kirby.frame=0
+
+    def do(self):
+        self.Kirby.frame = (self.Kirby.frame + SHOOT_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
+
+        if self.Kirby.frame >= 5:
+            self.Kirby.frame = 4
+
+            if self.Kirby.star_bullet == True:
+                self.Kirby.fire_star()
+                self.Kirby.star_bullet = False  # 초기화
+
+            self.Kirby.state_machine.change_state(self.Kirby.IDLE,('IDLE',None))
+
+    def exit(self,e):
+        pass
+
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 29, 2788, 29, 26, screen_x, self.Kirby.y,100,100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 29, 2788, 29, 26, 0,'h', screen_x, self.Kirby.y,100,100)
+
 class Kirby:
     def __init__(self):
         self.x, self.y = -900, 100 # -900 / 1800x
@@ -424,6 +455,7 @@ class Kirby:
         self.JUMP = Jump(self)
         self.SWALLOWED = Swallowed(self)
         self.SWALLOWED_WALK = Swallowed_Walk(self)
+        self.SHOOT = Shoot(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -436,8 +468,9 @@ class Kirby:
                 self.JUMP:{c_down: self.FLY},
                 self.SUCTION:{z_up: self.IDLE},#충돌처리되면 swallowed로
                 self.FLY:{c_up: self.JUMP},
-                self.SWALLOWED:{right_down: self.SWALLOWED_WALK, left_down: self.SWALLOWED_WALK,},
+                self.SWALLOWED:{right_down: self.SWALLOWED_WALK, left_down: self.SWALLOWED_WALK,z_down: self.SHOOT},
                 self.SWALLOWED_WALK:{right_up: self.SWALLOWED, left_up: self.SWALLOWED,},
+                self.SHOOT:{},
 
              }
         )
@@ -472,7 +505,6 @@ class Kirby:
         self.font.draw(screen_x - 60, self.y + 60,f'X: {self.x:.0f}, Y: {self.y:.0f}',(255, 255, 0))
         l,b,r,t = self.get_bb()
         draw_rectangle(l-offset_x,b,r-offset_x,t)
-        #draw_rectangle(*self.get_bb())
 
     def fire_star(self):
         print("Fire Star!")
@@ -491,7 +523,6 @@ class Kirby:
                 print('몬스터 삼킴')
                 #여기서 Swallowed 상태로 변경
                 self.state_machine.change_state(self.SWALLOWED,('SWALLOWED',None))
-                self.star_bullet = True # 쏠수있음
             elif self.knockback_timer <= 0:
                 print("커비 몬스터 충돌")
                 self.hp -= 1
