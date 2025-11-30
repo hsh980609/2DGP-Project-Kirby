@@ -22,6 +22,10 @@ def init():
     game_world.add_object(boss, 2)
     boss.target = kirby
 
+    game_world.add_collision_pair('star:monster', None, None)
+    game_world.add_collision_pair('kirby:monster', kirby, None)
+    game_world.add_collision_pair('suction:monster', kirby.SUCTION, None)
+
     grounds = [
         Ground(400, 35, 800, 70),
     ]

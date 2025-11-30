@@ -120,14 +120,6 @@ class Boss:
                 self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)
 
 
-    def set_target_location(self, x=None, y=None):
-        pass
-
-    def distance_less_than(self, x1, y1, x2, y2, r): # r은 미터단위.
-        pass
-
-    def move_little_to(self, tx, ty):
-        pass
     def kirby_in_atk_range(self, r):
         if self.target is None:
             return BehaviorTree.FAIL
@@ -210,6 +202,9 @@ class Boss:
             new_monster = Monster(random.randint(100,700),600)
             game_world.add_object(new_monster,1)
             game_world.add_collision_pair('monster:ground', new_monster,None)# 땅은 모드에서 등록해놓음
+            game_world.add_collision_pair('star:monster', new_monster, None)
+            game_world.add_collision_pair('kirby:monster', None, new_monster)
+            game_world.add_collision_pair('suction:monster', None, new_monster)
 
         # (몬스터 소환 로직)
         if self.shout_timer > 1.5:
