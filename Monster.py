@@ -33,6 +33,8 @@ class Monster:
         if Monster.image == None:
             Monster.image = load_image('Monster.png')
         self.x, self.y = x, y
+        self.y_velocity = 0.0
+        self.gravity = 1000.0  # 중력
         self.frame = 0
         self.dir = -1
 
@@ -68,6 +70,8 @@ class Monster:
             elif self.dir == 1 and self.x > self.patrol_end_x:
                 self.x = self.patrol_end_x
                 self.dir = -1
+        self.y += self.y_velocity * game_framework.frame_time
+        self.y_velocity -= self.gravity * game_framework.frame_time
 
     def draw(self,offset_x=0):
         frame_index = int(self.frame)

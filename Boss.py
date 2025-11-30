@@ -5,6 +5,7 @@ import math
 import game_framework
 import game_world
 from behavior_tree import BehaviorTree, Action, Sequence, Condition, Selector
+from Monster import Monster
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 10.0  # Km / Hour
@@ -41,7 +42,7 @@ class Boss:
             'Idle':{'y':700,'frames':4,'w':66,'h':100},
             'Walk':{'y':535,'frames':4,'w':66,'h':90},
             'Attack':{'frames': 2,
-                      'sprite':[(160,435,75,100),(225,400,90,100)]
+                      'sprite':[(160,435,70,100),(225,400,90,120)]
                       },
             'Jump':{'frames': 3,
                       'sprite':[(0,400,80,100),(80,400,80,100),(160,435,75,100)]
@@ -203,6 +204,11 @@ class Boss:
     def shout_to_kirby(self):
         self.state = 'Shout'
         self.shout_timer += game_framework.frame_time
+
+        if self.shout_timer < game_framework.frame_time * 1.5:
+            print("몬스터 소환")
+            new_monster = Monster(random.randint(100,700),600)
+            game_world.add_object(new_monster,1)
 
         # (몬스터 소환 로직)
         if self.shout_timer > 1.5:
