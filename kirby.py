@@ -206,7 +206,7 @@ class Run_Stop:
         self.Kirby.frame = 0
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + RUN_STOP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
+        self.Kirby.frame = (self.Kirby.frame + RUN_STOP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time *1.5)
         self.Kirby.x += self.Kirby.dir * RUN_SPEED_PPS * 0.1 * game_framework.frame_time
         # 중력 적용
         self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
@@ -328,7 +328,6 @@ class Suction:
 
         l, b, r, t = self.get_bb()
         draw_rectangle(l - offset_x, b, r - offset_x, t)
-        # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         if self.Kirby.face_dir == 1:
@@ -345,7 +344,6 @@ class Swallowed:
     def __init__(self, Kirby):
         self.Kirby = Kirby
 
-
     def enter(self, e):
         self.Kirby.dir=0
         self.Kirby.frame=0
@@ -354,10 +352,8 @@ class Swallowed:
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + SWALLOWED_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
 
-
     def exit(self,e):
         pass
-
 
     def draw(self,offset_x=0):
         screen_x = self.Kirby.x - offset_x
@@ -404,14 +400,11 @@ class Shoot:
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + SHOOT_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
-
+        if self.Kirby.star_bullet == True:
+            self.Kirby.fire_star()
+            self.Kirby.star_bullet = False  # 초기화
         if self.Kirby.frame >= 5:
             self.Kirby.frame = 4
-
-            if self.Kirby.star_bullet == True:
-                self.Kirby.fire_star()
-                self.Kirby.star_bullet = False  # 초기화
-
             self.Kirby.state_machine.change_state(self.Kirby.IDLE,('IDLE',None))
 
     def exit(self,e):
@@ -426,7 +419,7 @@ class Shoot:
 
 class Kirby:
     def __init__(self):
-        self.x, self.y = -900, 100 # -900 / 1800x
+        self.x, self.y = 1800, 100 # -900 / 1800x
         self.y_start = 0
 
         self.frame = 0
@@ -521,6 +514,7 @@ class Kirby:
             # 석션 상태라면 몬스터 삼켜짐 처리
             if self.state_machine.cur_state == self.SUCTION:
                 print('몬스터 삼킴')
+                game_world.remove_object(other)
                 #여기서 Swallowed 상태로 변경
                 self.state_machine.change_state(self.SWALLOWED,('SWALLOWED',None))
             elif self.knockback_timer <= 0:
@@ -558,6 +552,8 @@ class Kirby:
             elif min_collision == collision_r:
                 self.x += collision_r  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
         elif group == 'kirby:boss':
+            if other.state == 'Death':
+                return
             if self.knockback_timer <= 0:
                 print("커비 보스 충돌")
                 self.hp -= 1

@@ -28,7 +28,7 @@ class Boss:
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
         self.x, self.y = 700, 200
-        self.hp = 5
+        self.hp = 1
         self.frame = 0
         self.dir = 1
         self.font = load_font('ENCR10B.TTF', 16)
@@ -57,7 +57,7 @@ class Boss:
                       },
             'Hit':{'y':622,'frames':1,'w':66,'h':80},
             'Death':{'frames': 2,
-                      'sprite':[(685,110,55,90),(740,110,55,90)]
+                      'sprite':[(743,110,65,90),(810,110,65,90)]
                       },
         }
 
@@ -144,10 +144,11 @@ class Boss:
                 self.y += collision_b  # 뚫고 들어간 만큼 위로 밀어올림
                 self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)
         elif group == 'star:boss':
+            if self.state == 'Death':
+                return
             print('별과 보스 충돌!-보스쪽 알람')
             self.hp -= 1
             self.state = 'Hit'
-
 
     def kirby_in_atk_range(self, r):
         if self.target is None:
@@ -231,7 +232,7 @@ class Boss:
         if self.shout_timer < game_framework.frame_time * 1.5:
             print("몬스터 소환")
             new_monster = Monster(random.randint(100,700),600)
-            game_world.add_object(new_monster,1)
+            game_world.add_object(new_monster,3)
             game_world.add_collision_pair('monster:ground', new_monster,None)# 땅은 모드에서 등록해놓음
             game_world.add_collision_pair('star:monster', new_monster, None)
             game_world.add_collision_pair('kirby:monster', None, new_monster)
@@ -262,17 +263,17 @@ class Boss:
             return BehaviorTree.SUCCESS
         else:
             return  BehaviorTree.FAIL
+
     def do_think(self):
         self.state = 'Idle'
         self.think_timer +=game_framework.frame_time
-        if self.think_timer >2.0:
+        if self.think_timer >1.0:
             self.think_timer=0
             self.pattern=random.randint(0,2)
             print(f"생각 끝. 다음패턴: {self.pattern}")
             self.is_thinking=False
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
-
 
     def build_behavior_tree(self):
         # 커비가 공격범위에 있는가? -> 공격

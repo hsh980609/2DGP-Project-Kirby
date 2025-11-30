@@ -16,7 +16,7 @@ def init():
 
     kirby = Kirby()
     kirby.x, kirby.y = 100, 100
-    game_world.add_object(kirby, 2)
+    game_world.add_object(kirby, 3)
 
     boss = Boss()
     game_world.add_object(boss, 2)

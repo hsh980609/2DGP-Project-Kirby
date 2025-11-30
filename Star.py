@@ -16,6 +16,8 @@ class Star:
             Star.image = load_image('Star.png')
         self.x, self.y = x, y
         self.dir = dir
+        self.start_x = x
+        self.range = 400
 
         game_world.add_object(self, 2)
 
@@ -33,7 +35,7 @@ class Star:
     def update(self):
         self.x += self.dir * STAR_SPEED_PPS * game_framework.frame_time
 
-        if self.x <0 or self.x >800:
+        if abs(self.x - self.start_x) > self.range :
             game_world.remove_object(self)
 
     def get_bb(self):
