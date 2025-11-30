@@ -209,6 +209,7 @@ class Boss:
             print("몬스터 소환")
             new_monster = Monster(random.randint(100,700),600)
             game_world.add_object(new_monster,1)
+            game_world.add_collision_pair('monster:ground', new_monster,None)# 땅은 모드에서 등록해놓음
 
         # (몬스터 소환 로직)
         if self.shout_timer > 1.5:

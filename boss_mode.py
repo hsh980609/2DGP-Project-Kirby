@@ -29,6 +29,7 @@ def init():
     for ground in grounds:
         game_world.add_collision_pair('kirby:ground', kirby, ground)
         game_world.add_collision_pair('boss:ground', boss, ground)
+        game_world.add_collision_pair('monster:ground', None, ground) # 몬스터는 보스쪽에서
 
 
 def finish():

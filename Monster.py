@@ -130,3 +130,19 @@ class Monster:
                 print('몬스터 끌려감')
                 self.is_being_sucked = True
                 self.target = other.Kirby
+        elif group == 'monster:ground':
+            kl, kb, kr, kt = self.get_bb()
+            gl, gb, gr, gt = other.get_bb()
+
+            # 충돌 깊이 계산
+            collision_l = kr - gl
+            collision_r = gr - kl
+            collision_b = gt - kb
+
+            min_collision = min(collision_l, collision_r, collision_b)
+
+            # 바닥밟음
+            if min_collision == collision_b:
+                self.y += collision_b  # 뚫고 들어간 만큼 위로 밀어올림
+                self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)
+            pass
