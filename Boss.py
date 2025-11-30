@@ -39,6 +39,7 @@ class Boss:
         self.walk_timer = 0
         self.think_timer = 0
         self.shout_timer=0
+        self.hit_timer=0
         self.target = None
         self.state = 'Idle'
 
@@ -54,6 +55,7 @@ class Boss:
             'Shout':{'frames': 2,
                       'sprite':[(245,110,55,90),(300,110,55,90)]
                       },
+            'Hit':{'y':622,'frames':1,'w':66,'h':80},
         }
 
         self.build_behavior_tree()
@@ -64,16 +66,25 @@ class Boss:
             game_world.remove_object(self)
             return
 
+        if self.state == 'Hit':
+            self.hit_timer += game_framework.frame_time
+
+            if self.hit_timer > 2.0:
+                self.hit_timer = 0
+                self.state = 'Idle'
+                self.is_thinking = True  # 맞았으니 잠깐 생각
+
+        else:
+            # Hit가 아닐 때만 행동 트리 실행
+            self.bt.run()
+
         total_frames = self.state_animation[self.state]['frames']
         if self.state == 'Jump':
             if self.y_velocity > 0:
                 self.frame = 1  # 올라갈 때 (2번째 프레임)
             else:
                 self.frame = 2  # 내려갈 때 (3번째 프레임)
-
         self.frame = (self.frame + total_frames * ACTION_PER_TIME * game_framework.frame_time) % total_frames
-        self.bt.run()
-
 
         # 중력을 적용
         self.y += self.y_velocity * game_framework.frame_time
@@ -131,6 +142,7 @@ class Boss:
         elif group == 'star:boss':
             print('별과 보스 충돌!-보스쪽 알람')
             self.hp -= 1
+            self.state = 'Hit'
 
 
     def kirby_in_atk_range(self, r):
