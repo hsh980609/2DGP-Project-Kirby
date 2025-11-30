@@ -28,7 +28,7 @@ class Boss:
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
         self.x, self.y = 700, 200
-        self.hp = 1
+        self.hp = 5
         self.frame = 0
         self.dir = 1
         self.font = load_font('ENCR10B.TTF', 16)
@@ -36,6 +36,7 @@ class Boss:
         self.pattern =0
         self.is_thinking = False  # 생각 중인지 체크하는 플래그
         self.attack_timer = 0
+        self.walk_timer = 0
         self.think_timer = 0
         self.shout_timer=0
         self.target = None
@@ -175,7 +176,9 @@ class Boss:
         else:
             self.dir = -1
 
-        if dist < r:
+        self.walk_timer +=game_framework.frame_time
+        if self.walk_timer>2.0:
+            self.walk_timer = 0
             self.is_thinking = True
             return BehaviorTree.SUCCESS
 
@@ -186,23 +189,23 @@ class Boss:
         if self.target is None:
             return BehaviorTree.FAIL
 
-        self.state ='Jump'
-        dx = self.target.x - self.x
-        dy = self.target.y - self.y
-        dist = math.sqrt(dx**2 + dy**2)
+        if self.state !='Jump':
+            self.state = 'Jump'
+            # 점프 뛸때 한번만 방향 설정
+            dx = self.target.x - self.x
+            if dx > 0:
+                self.dir = 1
+            else:
+                self.dir = -1
+            if self.y_velocity == 0: # 땅에 있을떄만
+                self.y_velocity = 800
+            return BehaviorTree.RUNNING
+        else: # 이미 점프 상태라면
+            if self.y_velocity == 0: # 착지 체크
+                self.is_thinking = True
+                return BehaviorTree.SUCCESS
 
-        if dx > 0:
-            self.dir = 1
-        else:
-            self.dir = -1
-
-        if self.y_velocity == 0:
-            self.y_velocity = 800  # 점프력 (원하는 높이만큼 조절)
-        if dist < r:
-            self.is_thinking = True
-            return BehaviorTree.SUCCESS
-
-        self.x += self.dir*RUN_SPEED_PPS*game_framework.frame_time
+        self.x += self.dir*RUN_SPEED_PPS*game_framework.frame_time # 공중 이동 착지전까지 계속된다.
         return BehaviorTree.RUNNING
 
     def shout_to_kirby(self):
@@ -246,7 +249,7 @@ class Boss:
     def do_think(self):
         self.state = 'Idle'
         self.think_timer +=game_framework.frame_time
-        if self.think_timer >1.0:
+        if self.think_timer >2.0:
             self.think_timer=0
             self.pattern=random.randint(0,2)
             print(f"생각 끝. 다음패턴: {self.pattern}")
