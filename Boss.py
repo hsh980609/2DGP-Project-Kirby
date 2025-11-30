@@ -28,11 +28,14 @@ class Boss:
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
         self.x, self.y = 700, 200
+        self.hp = 1
         self.frame = 0
         self.dir = 1
-        self.attack_timer = 0
+        self.font = load_font('ENCR10B.TTF', 16)
+
         self.pattern =0
         self.is_thinking = False  # 생각 중인지 체크하는 플래그
+        self.attack_timer = 0
         self.think_timer = 0
         self.shout_timer=0
         self.target = None
@@ -55,6 +58,11 @@ class Boss:
         self.build_behavior_tree()
 
     def update(self):
+        if self.hp <= 0:
+            print("보스 체력 0. 보스 사망")
+            game_world.remove_object(self)
+            return
+
         total_frames = self.state_animation[self.state]['frames']
         if self.state == 'Jump':
             if self.y_velocity > 0:
@@ -96,6 +104,7 @@ class Boss:
         else:
             target_image.clip_composite_draw(sprite_x, sprite_y, sprite_w, sprite_h, 0, 'h', screen_x, self.y, 300, 300)
 
+        self.font.draw(screen_x - 40, self.y + 80, f'HP: {self.hp:.0f}', (255, 255, 0))
         draw_rectangle(*self.get_bb())
         draw_circle(screen_x, self.y, 200,255,255,255)
 
@@ -118,6 +127,9 @@ class Boss:
             if min_collision == collision_b:
                 self.y += collision_b  # 뚫고 들어간 만큼 위로 밀어올림
                 self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)
+        elif group == 'star:boss':
+            print('별과 보스 충돌!-보스쪽 알람')
+            self.hp -= 1
 
 
     def kirby_in_atk_range(self, r):

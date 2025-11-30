@@ -37,6 +37,7 @@ class Monster:
         self.gravity = 1000.0  # 중력
         self.frame = 0
         self.dir = -1
+        self.hp = 1
 
         self.knockback_timer = 0.0
         self.is_being_sucked = False
@@ -46,6 +47,11 @@ class Monster:
         self.patrol_end_x = self.x + 100
 
     def update(self):
+        if self.hp <=0:
+            print('몬스터 사망')
+            game_world.remove_object(self)
+            return
+
         if self.knockback_timer > 0: # 넉백 상태라면
             self.x += self.dir * KNOCKBACK_SPEED_PPS * game_framework.frame_time
             self.knockback_timer -= game_framework.frame_time
@@ -102,7 +108,7 @@ class Monster:
     def handle_collision(self, group, other):
         if group == 'star:monster':
             print('별과 몬스터 충돌!-몬스터쪽 알람')
-            # 임시로 별과 충돌하면 밀려나게만 해놓음.
+            self.hp -= 1
             if self.knockback_timer <= 0: # 넉백 중 아니라면
                 print('충돌! - 몬스터쪽 알람')
                 self.knockback_timer = 0.5 # 0.5초간 넉백

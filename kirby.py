@@ -355,6 +355,7 @@ class Kirby:
         self.gravity = 1000
         self.on_ground = False
         self.star_bullet = False # Fire_star 쓸수있는지
+        self.hp = 5
 
         self.image = load_image('Kirby_sheet.png')
 
@@ -387,6 +388,10 @@ class Kirby:
         )
 
     def update(self):
+        if self.hp <= 0:
+            print('Game Over')
+            game_framework.quit()
+
         if self.knockback_timer > 0:
             self.knockback_timer -= game_framework.frame_time
             self.x += self.dir * KNOCKBACK_SPEED_PPS * game_framework.frame_time
@@ -408,6 +413,7 @@ class Kirby:
             self.state_machine.draw(offset_x)
 
         screen_x = self.x - offset_x
+        self.font.draw(screen_x - 40, self.y + 80, f'HP: {self.hp:.0f}', (255, 255, 0))
         self.font.draw(screen_x - 60, self.y + 60,f'X: {self.x:.0f}, Y: {self.y:.0f}',(255, 255, 0))
         l,b,r,t = self.get_bb()
         draw_rectangle(l-offset_x,b,r-offset_x,t)
@@ -433,6 +439,7 @@ class Kirby:
                 #game_world.remove_object(other)
             elif self.knockback_timer <= 0:
                 print("커비 몬스터 충돌")
+                self.hp -= 1
                 self.knockback_timer = 0.5
                 if self.x < other.x:
                     self.dir = -1
@@ -467,6 +474,7 @@ class Kirby:
         elif group == 'kirby:boss':
             if self.knockback_timer <= 0:
                 print("커비 보스 충돌")
+                self.hp -= 1
                 self.knockback_timer = 0.5
                 if self.x < other.x:
                     self.dir = -1
