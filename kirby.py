@@ -366,6 +366,33 @@ class Swallowed:
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 30, 2734, 30, 30, 0,'h', screen_x, self.Kirby.y,100,100)
 
+class Swallowed_Walk:
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
+
+    def enter(self, e):
+        if e:
+            if right_down(e):
+                self.Kirby.dir = self.Kirby.face_dir = 1
+            elif left_down(e):
+                self.Kirby.dir = self.Kirby.face_dir = -1
+
+    def do(self):
+        self.Kirby.frame = (self.Kirby.frame + WALK_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
+        # 중력 적용
+        self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
+        self.Kirby.y_velocity -= self.Kirby.gravity * 3 * game_framework.frame_time  # 임시방편
+
+    def exit(self, e):
+        pass
+
+    def draw(self, offset_x=0):
+        screen_x = self.Kirby.x - offset_x
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 29, 2670, 29, 30, screen_x, self.Kirby.y, 100, 100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 29, 2670, 29, 30, 0, 'h', screen_x,self.Kirby.y, 100, 100)
 class Kirby:
     def __init__(self):
         self.x, self.y = -900, 100 # -900 / 1800x
@@ -396,6 +423,7 @@ class Kirby:
         self.SUCTION = Suction(self)
         self.JUMP = Jump(self)
         self.SWALLOWED = Swallowed(self)
+        self.SWALLOWED_WALK = Swallowed_Walk(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -408,7 +436,8 @@ class Kirby:
                 self.JUMP:{c_down: self.FLY},
                 self.SUCTION:{z_up: self.IDLE},#충돌처리되면 swallowed로
                 self.FLY:{c_up: self.JUMP},
-                self.SWALLOWED:{z_down:self.IDLE}
+                self.SWALLOWED:{right_down: self.SWALLOWED_WALK, left_down: self.SWALLOWED_WALK,},
+                self.SWALLOWED_WALK:{right_up: self.SWALLOWED, left_up: self.SWALLOWED,},
 
              }
         )
