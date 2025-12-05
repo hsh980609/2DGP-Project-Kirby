@@ -6,13 +6,18 @@ class Background:
 
         self.clip_w = self.image.w // 3
         self.clip_h = self.image.h // 3
-
         self.clip_bottom = self.clip_h * 2
+
     def update(self):
         pass
 
     def draw(self,offset_x = 0):
-        self.image.clip_draw(0, self.clip_bottom, self.clip_w, self.clip_h, 400, 300, 1000, 900)
+        screen_w = get_canvas_width()
+        screen_h = get_canvas_height()
+
+        center_x = screen_w // 2
+        center_y = screen_h // 2
+        self.image.clip_draw(0, self.clip_bottom, self.clip_w, self.clip_h, center_x, center_y, screen_w * 1.2, screen_h * 1.2)
 
 class Boss_Background:
     def __init__(self):
@@ -22,4 +27,10 @@ class Boss_Background:
         pass
 
     def draw(self,offset_x = 0):
-        self.image.clip_draw(0, -100, self.image.w, self.image.h, 400, 300, 1200,1000)
+        screen_w = get_canvas_width()
+        screen_h = get_canvas_height()
+
+        center_x = screen_w // 2
+        center_y = screen_h // 2
+
+        self.image.draw(center_x, center_y, screen_w * 1.2, screen_h*1.2)

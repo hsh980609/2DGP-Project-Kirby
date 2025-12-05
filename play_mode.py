@@ -15,7 +15,10 @@ camera_offset_x = 0
 camera_offset_y = 0 # 임시
 
 stage = None
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 600
+MAP_LEFT_LIMIT = -950
+MAP_RIGHT_LIMIT = 1950
 
 PORTAL_X_MIN = 1830
 PORTAL_X_MAX = 1870
@@ -91,12 +94,12 @@ def update():
     game_world.update()
     game_world.handle_collision()
 
-    camera_offset_x = kirby.x - (SCREEN_WIDTH // 2) # 400
+    camera_offset_x = kirby.x - (SCREEN_WIDTH // 2)
 
-    if camera_offset_x < -950:
-        camera_offset_x = -950
-    elif camera_offset_x >1150:
-        camera_offset_x = 1150
+    if camera_offset_x < MAP_LEFT_LIMIT:
+        camera_offset_x = MAP_LEFT_LIMIT
+    elif camera_offset_x > MAP_RIGHT_LIMIT - SCREEN_WIDTH:
+        camera_offset_x = MAP_RIGHT_LIMIT - SCREEN_WIDTH
 
 
 
