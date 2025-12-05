@@ -1,3 +1,5 @@
+import random
+
 from pico2d import *
 import game_framework
 import game_world
@@ -35,8 +37,8 @@ class Monster:
         self.x, self.y = x, y
         self.y_velocity = 0.0
         self.gravity = 1000.0  # 중력
-        self.frame = 0
-        self.dir = -1
+        self.frame = random.randint(0,4)
+        self.dir = random.choice([-1,1])
         self.hp = 1
 
         self.knockback_timer = 0.0
