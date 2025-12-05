@@ -8,6 +8,7 @@ from background import Background
 from stage import Stage
 from stage import Ground
 from Monster import Monster
+import common
 
 kirby = None
 running = True
@@ -94,12 +95,12 @@ def update():
     game_world.update()
     game_world.handle_collision()
 
-    camera_offset_x = kirby.x - (SCREEN_WIDTH // 2)
+    camera_offset_x = kirby.x - (common.SCREEN_WIDTH // 2)
 
     if camera_offset_x < MAP_LEFT_LIMIT:
         camera_offset_x = MAP_LEFT_LIMIT
-    elif camera_offset_x > MAP_RIGHT_LIMIT - SCREEN_WIDTH:
-        camera_offset_x = MAP_RIGHT_LIMIT - SCREEN_WIDTH
+    elif camera_offset_x > MAP_RIGHT_LIMIT - common.SCREEN_WIDTH:
+        camera_offset_x = MAP_RIGHT_LIMIT - common.SCREEN_WIDTH
 
 
 

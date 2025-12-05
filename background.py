@@ -1,4 +1,5 @@
 from pico2d import *
+import common
 
 class Background:
     def __init__(self):
@@ -12,12 +13,10 @@ class Background:
         pass
 
     def draw(self,offset_x = 0):
-        screen_w = get_canvas_width()
-        screen_h = get_canvas_height()
 
-        center_x = screen_w // 2
-        center_y = screen_h // 2
-        self.image.clip_draw(0, self.clip_bottom, self.clip_w, self.clip_h, center_x, center_y, screen_w * 1.2, screen_h * 1.2)
+        center_x = common.SCREEN_WIDTH // 2
+        center_y = common.SCREEN_HEIGHT // 2
+        self.image.clip_draw(0, self.clip_bottom, self.clip_w, self.clip_h, center_x, center_y, common.SCREEN_WIDTH * 1.2, common.SCREEN_HEIGHT * 1.2)
 
 class Boss_Background:
     def __init__(self):
@@ -27,10 +26,7 @@ class Boss_Background:
         pass
 
     def draw(self,offset_x = 0):
-        screen_w = get_canvas_width()
-        screen_h = get_canvas_height()
+        center_x = common.SCREEN_WIDTH // 2
+        center_y = common.SCREEN_HEIGHT // 2
 
-        center_x = screen_w // 2
-        center_y = screen_h // 2
-
-        self.image.draw(center_x, center_y, screen_w * 1.2, screen_h * 1.2)
+        self.image.draw(center_x, center_y, common.SCREEN_WIDTH * 1.2, common.SCREEN_HEIGHT * 1.2)
