@@ -33,4 +33,4 @@ class Boss_Background:
         center_x = screen_w // 2
         center_y = screen_h // 2
 
-        self.image.draw(center_x, center_y, screen_w * 1.2, screen_h*1.2)
+        self.image.draw(center_x, center_y, screen_w * 1.2, screen_h * 1.2)
