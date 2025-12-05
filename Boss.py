@@ -143,9 +143,10 @@ class Boss:
             if min_collision == collision_b:
                 self.y += collision_b  # 뚫고 들어간 만큼 위로 밀어올림
                 self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)
+
+        if self.state == 'Death': # 사망시 다른 객체와의 충돌처리 X
+            return
         elif group == 'star:boss':
-            if self.state == 'Death':
-                return
             print('별과 보스 충돌!-보스쪽 알람')
             self.hp -= 1
             self.state = 'Hit'

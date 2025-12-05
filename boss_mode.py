@@ -30,7 +30,7 @@ def init():
     game_world.add_collision_pair('suction:monster', kirby.SUCTION, None)
 
     grounds = [
-        Ground(400, 35, 800, 70),
+        Ground(700, 35, 1400, 70),
     ]
     game_world.add_objects(grounds, 1)
     for ground in grounds:
@@ -57,10 +57,10 @@ def update():
     game_world.update()
     game_world.handle_collision()
 
-    if kirby.x < 20:
-        kirby.x = 20
-    elif kirby.x >800:
-        kirby.x = 800
+    if kirby.x < 100:
+        kirby.x = 100
+    elif kirby.x >1050:
+        kirby.x = 1050
 
 def draw():
     clear_canvas()
