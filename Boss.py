@@ -256,7 +256,7 @@ class Boss:
         if self.shout_timer < game_framework.frame_time * 1.5:
             print("몬스터 소환")
             self.Shout_sound.play()
-            new_monster = Monster(random.randint(100,700),600)
+            new_monster = Monster(random.randint(100,1000),800)
             game_world.add_object(new_monster,3)
             game_world.add_collision_pair('monster:ground', new_monster,None)# 땅은 모드에서 등록해놓음
             game_world.add_collision_pair('star:monster', new_monster, None)
