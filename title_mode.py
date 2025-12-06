@@ -5,7 +5,7 @@ import common
 
 def init():
     global image
-    image = load_image('Title.png')
+    image = load_image('resources/Title.png')
 
 
 def finish():

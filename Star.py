@@ -29,8 +29,8 @@ class Star:
         else:
             self.image.clip_draw(593,410,30,50,screen_x,self.y,100,100)
 
-        l, b, r, t = self.get_bb()
-        draw_rectangle(l - offset_x, b, r - offset_x, t)
+        # l, b, r, t = self.get_bb()
+        # draw_rectangle(l - offset_x, b, r - offset_x, t)
 
     def update(self):
         self.x += self.dir * STAR_SPEED_PPS * game_framework.frame_time
