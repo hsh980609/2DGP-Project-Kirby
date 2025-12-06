@@ -77,6 +77,7 @@ FLY_FRAMES_PER_ACTION = 6
 SUCTION_FRAMES_PER_ACTION = 5
 SWALLOWED_FRAMES_PER_ACTION = 2
 SHOOT_FRAMES_PER_ACTION = 5
+DANCE_FRAMES_PER_ACTION = 8
 
 MAP_CEILING_Y = 600.0 # 맵 천장
 MAP_FLOOR_Y = 100.0 # 맵 바닥.
@@ -424,23 +425,23 @@ class Shoot:
 class Dance:
     def __init__(self, Kirby):
         self.Kirby = Kirby
-
+        self.dance_frame_x = [0,25,50,75,100, 122, 145, 168]
     def enter(self,e):
-        self.Kirby.dir=0
         self.Kirby.frame = 0
 
     def do(self):
-        self.Kirby.frame = (self.Kirby.frame + 0.2 * ACTION_PER_TIME * game_framework.frame_time) % 4
+        self.Kirby.frame = (self.Kirby.frame + DANCE_FRAMES_PER_ACTION * game_framework.frame_time) % 8
 
     def exit(self,e):
         pass
 
     def draw(self,offset_x=0):
         screen_x = self.Kirby.x - offset_x
-        if self.Kirby.face_dir == 1:  # right
-            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 30, 2880, 30, 30, screen_x, self.Kirby.y,100,100)
-        else:  # face_dir == -1: # left
-            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 30, 2880, 30, 30, 0,'h', screen_x, self.Kirby.y,100,100)
+        frame_idx = int(self.Kirby.frame)
+        sprite_x = self.dance_frame_x[frame_idx]
+        self.Kirby.image.clip_draw(sprite_x, 2883, 25, 28, screen_x, self.Kirby.y, 100, 100)
+
+
 
 class Kirby:
     def __init__(self):
@@ -490,7 +491,7 @@ class Kirby:
             self.IDLE,
             {
                 self.SLEEP : {space_down: self.IDLE},
-                self.IDLE :{time_out: self.SLEEP, z_down: self.SUCTION, x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,},
+                self.IDLE :{c_down: self.DANCE,time_out: self.SLEEP, z_down: self.SUCTION, x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,},
                 self.WALK :{x_down: self.JUMP, right_up: self.IDLE, left_up: self.IDLE,},
                 self.RUN :{x_down: self.JUMP, right_up: self.RUN_STOP, left_up: self.RUN_STOP,},
                 self.RUN_STOP :{time_out: self.IDLE},

@@ -81,6 +81,8 @@ def update():
             bgm.stop()
             victory_bgm.play()
             victory_played = True
+
+            kirby.victory()
         if victory_played:
             victory_timer +=game_framework.frame_time
             if victory_timer >7.0:
