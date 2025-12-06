@@ -556,13 +556,15 @@ class Kirby:
         self.state_machine.change_state(self.DANCE,('VICTORY',None))
     def handle_collision(self, group, other):
         if group == 'kirby:monster':
+            if self.knockback_timer > 0: # 넉백중이라면 충돌처리 X
+                return
             # 석션 상태라면 몬스터 삼켜짐 처리
             if self.state_machine.cur_state == self.SUCTION:
                 print('몬스터 삼킴')
                 game_world.remove_object(other)
                 #여기서 Swallowed 상태로 변경
                 self.state_machine.change_state(self.SWALLOWED,('SWALLOWED',None))
-            elif self.knockback_timer <= 0:
+            else:
                 self.knockback_sound.play()
                 print("커비 몬스터 충돌")
                 self.hp -= 1
@@ -571,6 +573,21 @@ class Kirby:
                     self.dir = -1
                 else:
                     self.dir = 1
+
+        elif group == 'kirby:boss':
+            if other.state == 'Death':
+                return
+            if self.knockback_timer > 0: # 넉백중이라면 충돌처리 X
+                return
+            self.knockback_sound.play()
+            print("커비 보스 충돌")
+            self.hp -= 1
+            self.knockback_timer = 0.5
+            if self.x < other.x:
+                self.dir = -1
+            else:
+                self.dir = 1
+
         elif group == 'kirby:ground':
             kl, kb, kr, kt = self.get_bb()
             gl, gb, gr, gt = other.get_bb()
@@ -599,18 +616,7 @@ class Kirby:
                 self.x -= collision_l  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
             elif min_collision == collision_r:
                 self.x += collision_r  # 겹친 만큼 X좌표를 왼쪽으로 밀어냄
-        elif group == 'kirby:boss':
-            if other.state == 'Death':
-                return
-            if self.knockback_timer <= 0:
-                self.knockback_sound.play()
-                print("커비 보스 충돌")
-                self.hp -= 1
-                self.knockback_timer = 0.5
-                if self.x < other.x:
-                    self.dir = -1
-                else:
-                    self.dir = 1
+
 
     def handle_event(self, event):
         e = ('INPUT', event)
