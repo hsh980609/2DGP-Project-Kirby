@@ -172,6 +172,9 @@ class Boss:
             self.state = 'Hit'
 
     def kirby_in_atk_range(self, r):
+        if self.state == 'Attack':
+            return BehaviorTree.SUCCESS
+
         if self.target is None:
             return BehaviorTree.FAIL
 
