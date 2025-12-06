@@ -78,6 +78,7 @@ SUCTION_FRAMES_PER_ACTION = 5
 SWALLOWED_FRAMES_PER_ACTION = 2
 SHOOT_FRAMES_PER_ACTION = 5
 DANCE_FRAMES_PER_ACTION = 8
+SWALLOWED_JUMP_FRAMES_PER_ACTION = 4
 
 MAP_CEILING_Y = 600.0 # 맵 천장
 MAP_FLOOR_Y = 100.0 # 맵 바닥.
@@ -397,6 +398,38 @@ class Swallowed_Walk:
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 29, 2670, 29, 30, 0, 'h', screen_x,self.Kirby.y, 100, 100)
 
+class Swallowed_Jump:
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
+
+    def enter(self, e):
+        self.Kirby.frame = 0
+        self.Kirby.y_velocity = 400
+        if e:
+            if right_down(e):
+                self.Kirby.dir = self.Kirby.face_dir = 1
+            elif left_down(e):
+                self.Kirby.dir = self.Kirby.face_dir = -1
+
+    def do(self):
+        self.Kirby.y += self.Kirby.y_velocity * game_framework.frame_time
+        self.Kirby.y_velocity -= self.Kirby.gravity * game_framework.frame_time
+        self.Kirby.x += self.Kirby.dir * WALK_SPEED_PPS * game_framework.frame_time
+        if self.Kirby.y_velocity > 0:
+            self.Kirby.frame = 0
+        else:
+            self.Kirby.frame = (self.Kirby.frame + SWALLOWED_JUMP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+
+    def exit(self, e):
+        pass
+
+    def draw(self, offset_x=0):
+        screen_x = self.Kirby.x - offset_x
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(int(self.Kirby.frame+2) * 28, 2700, 28, 28, screen_x, self.Kirby.y, 100, 100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame +2) * 28, 2700, 28, 28, 0, 'h', screen_x,self.Kirby.y, 100, 100)
+
 class Shoot:
     def __init__(self, Kirby):
         self.Kirby = Kirby
@@ -461,9 +494,9 @@ class Kirby:
 
         self.image = load_image('resources/Kirby/Kirby_sheet.png')
         self.jump_sound = load_wav('resources/Sounds/jump.wav')
-        self.jump_sound.set_volume(32)
+        self.jump_sound.set_volume(200)
         self.inhale_sound = load_wav('resources/Sounds/inhale.wav')
-        self.inhale_sound.set_volume(32)
+        self.inhale_sound.set_volume(70)
         self.Shoot_sound = load_wav('resources/Sounds/Shoot.wav')
         self.Shoot_sound.set_volume(32)
         self.Fall_sound = load_wav('resources/Sounds/Fall.wav')
@@ -492,6 +525,7 @@ class Kirby:
         self.SWALLOWED_WALK = Swallowed_Walk(self)
         self.SHOOT = Shoot(self)
         self.DANCE = Dance(self)
+        self.SWALLOWED_JUMP = Swallowed_Jump(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -504,10 +538,11 @@ class Kirby:
                 self.JUMP:{c_down: self.FLY},
                 self.SUCTION:{z_up: self.IDLE},#충돌처리되면 swallowed로
                 self.FLY:{c_up: self.JUMP},
-                self.SWALLOWED:{right_down: self.SWALLOWED_WALK, left_down: self.SWALLOWED_WALK,z_down: self.SHOOT},
-                self.SWALLOWED_WALK:{right_up: self.SWALLOWED, left_up: self.SWALLOWED,},
+                self.SWALLOWED:{x_down: self.SWALLOWED_JUMP,right_down: self.SWALLOWED_WALK, left_down: self.SWALLOWED_WALK,z_down: self.SHOOT},
+                self.SWALLOWED_WALK:{x_down: self.SWALLOWED_JUMP,right_up: self.SWALLOWED, left_up: self.SWALLOWED,},
                 self.SHOOT:{},
-                self.DANCE:{}
+                self.DANCE:{},
+                self.SWALLOWED_JUMP:{},
 
              }
         )
@@ -618,6 +653,11 @@ class Kirby:
                             self.state_machine.change_state(self.RUN,('LANDING', None))
                         else:
                             self.state_machine.change_state(self.WALK,('LANDING', None))
+                elif self.state_machine.cur_state == self.SWALLOWED_JUMP:
+                    if self.dir == 0:
+                        self.state_machine.change_state(self.SWALLOWED)
+                    else:
+                        self.state_machine.change_state(self.SWALLOWED_WALK)
 
 
             elif min_collision == collision_l:
@@ -659,6 +699,18 @@ class Kirby:
             # fly로 가는 c_down 아니면 이벤트 안넘기고 종료
             if not c_down(e):
                 return
+
+        elif self.state_machine.cur_state == self.SWALLOWED_JUMP:
+            if right_down(e):
+                self.dir = 1
+                self.face_dir = 1
+            elif left_down(e):
+                self.dir = -1
+                self.face_dir = -1
+            elif right_up(e) and self.dir == 1:
+                self.dir = 0
+            elif left_up(e) and self.dir == -1:
+                self.dir = 0
 
         elif self.state_machine.cur_state == self.FLY:
             if right_down(e):
