@@ -85,7 +85,7 @@ def update():
             kirby.victory()
         if victory_played:
             victory_timer +=game_framework.frame_time
-            if victory_timer >7.0:
+            if victory_timer >5.0:
                 game_framework.quit()
 
     if kirby.x < 100:

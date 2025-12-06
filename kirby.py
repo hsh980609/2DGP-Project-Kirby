@@ -175,6 +175,8 @@ class Run:
         self.Kirby = Kirby
 
     def enter(self,e):
+        if e !=('LANDING', None): # 런 상태로 진입할때만 소리재생
+            self.Kirby.Run_sound.play()
         if e:
             if right_down(e):
                 self.Kirby.dir = self.Kirby.face_dir = 1
@@ -205,6 +207,7 @@ class Run_Stop:
 
     def enter(self,e):
         self.Kirby.frame = 0
+        self.Kirby.Run_stop_sound.play()
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + RUN_STOP_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time *1.5)
@@ -441,8 +444,6 @@ class Dance:
         sprite_x = self.dance_frame_x[frame_idx]
         self.Kirby.image.clip_draw(sprite_x, 2883, 25, 28, screen_x, self.Kirby.y, 100, 100)
 
-
-
 class Kirby:
     def __init__(self):
         self.x, self.y = 1800, 100 # -900 / 1800x
@@ -469,6 +470,10 @@ class Kirby:
         self.Fall_sound.set_volume(32)
         self.knockback_sound = load_wav('knockback.wav')
         self.knockback_sound.set_volume(32)
+        self.Run_sound = load_wav('Run.wav')
+        self.Run_sound.set_volume(32)
+        self.Run_stop_sound = load_wav('Run_stop.wav')
+        self.Run_stop_sound.set_volume(32)
 
         self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
         self.knockback_timer = 0.0
@@ -578,14 +583,16 @@ class Kirby:
             if min_collision == collision_b:
                 self.y += collision_b  # 겹친 만큼 Y좌표를 밀어 올림
                 self.y_velocity = 0
+
+                # 착지 시 처리
                 if self.state_machine.cur_state == self.JUMP:
                     if self.dir == 0:
                         self.state_machine.change_state(self.IDLE)
                     else:
                         if self.last_state == 1:
-                            self.state_machine.change_state(self.RUN)
+                            self.state_machine.change_state(self.RUN,('LANDING', None))
                         else:
-                            self.state_machine.change_state(self.WALK)
+                            self.state_machine.change_state(self.WALK,('LANDING', None))
 
 
             elif min_collision == collision_l:
