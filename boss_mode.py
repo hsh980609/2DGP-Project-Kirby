@@ -8,14 +8,23 @@ from stage import Ground
 from Boss import Boss
 
 bgm = None
+victory_bgm = None
+victory_played = False
+victory_timer = 0
+boss = None
 
 def init():
     print("보스룸 시작")
-    global bgm
-    global kirby
+    global bgm, victory_bgm,victory_played, boss, victory_timer, kirby
+
     bgm = load_music('08 vs. Boss 1.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
+
+    victory_bgm = load_music('17 Kirby Clear Dance 1.mp3')
+    victory_bgm.set_volume(64)
+    victory_played = False
+    victory_timer = 0
 
     background = Boss_Background()
     game_world.add_object(background, 0)
@@ -47,7 +56,9 @@ def init():
 
 def finish():
     print("보스룸 종료")
-    pass
+    global bgm, victory_bgm
+    bgm = None
+    victory_bgm = None
 
 def handle_events():
     events = get_events()
@@ -60,8 +71,20 @@ def handle_events():
             kirby.handle_event(event)
 
 def update():
+    global victory_played, victory_timer
+
     game_world.update()
     game_world.handle_collision()
+
+    if boss.state == 'Death':
+        if not victory_played:
+            bgm.stop()
+            victory_bgm.play()
+            victory_played = True
+        if victory_played:
+            victory_timer +=game_framework.frame_time
+            if victory_timer >7.0:
+                game_framework.quit()
 
     if kirby.x < 100:
         kirby.x = 100
