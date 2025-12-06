@@ -490,7 +490,7 @@ class Kirby:
         self.gravity = 1000
         self.on_ground = False
         self.star_bullet = False # Fire_star 쓸수있는지
-        self.hp = 5
+        self.hp = 10
 
         self.image = load_image('resources/Kirby/Kirby_sheet.png')
         self.jump_sound = load_wav('resources/Sounds/jump.wav')
@@ -531,7 +531,7 @@ class Kirby:
             self.IDLE,
             {
                 self.SLEEP : {space_down: self.IDLE},
-                self.IDLE :{c_down: self.DANCE,time_out: self.SLEEP, z_down: self.SUCTION, x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,},
+                self.IDLE :{time_out: self.SLEEP, z_down: self.SUCTION, x_down: self.JUMP, right_down: self.WALK, left_down: self.WALK,},
                 self.WALK :{x_down: self.JUMP, right_up: self.IDLE, left_up: self.IDLE,},
                 self.RUN :{x_down: self.JUMP, right_up: self.RUN_STOP, left_up: self.RUN_STOP,},
                 self.RUN_STOP :{time_out: self.IDLE},

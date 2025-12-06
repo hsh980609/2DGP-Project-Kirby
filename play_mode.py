@@ -16,8 +16,6 @@ camera_offset_x = 0
 camera_offset_y = 0 # 임시
 
 stage = None
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 600
 MAP_LEFT_LIMIT = -950
 MAP_RIGHT_LIMIT = 1950
 
