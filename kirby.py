@@ -235,9 +235,11 @@ class Jump:
         self.Kirby.frame = 0
         if self.Kirby.last_state == 3:
             self.Kirby.y_velocity = 0  # Fly에서
-        elif self.Kirby.last_state == 1:  # Run에서
+        elif self.Kirby.last_state == 1:
+            self.Kirby.jump_sound.play()# Run에서
             self.Kirby.y_velocity = 600
         else:  # Walk/Idle에서
+            self.Kirby.jump_sound.play()
             self.Kirby.y_velocity = 500
 
     def do(self):
@@ -292,7 +294,7 @@ class Fly:
     def exit(self, e):
         self.Kirby.dir = 0
         self.Kirby.last_state = 3
-        pass
+        self.Kirby.Fall_sound.play()
 
     def draw(self,offset_x=0):
         screen_x = self.Kirby.x - offset_x
@@ -308,6 +310,7 @@ class Suction:
     def enter(self, e):
         self.Kirby.dir=0
         self.Kirby.frame = 0
+        self.Kirby.inhale_sound.play()
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + SUCTION_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 5
@@ -397,6 +400,7 @@ class Shoot:
     def enter(self, e):
         self.Kirby.dir=0
         self.Kirby.frame=0
+        self.Kirby.Shoot_sound.play()
 
     def do(self):
         self.Kirby.frame = (self.Kirby.frame + SHOOT_FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
@@ -433,6 +437,14 @@ class Kirby:
         self.hp = 5
 
         self.image = load_image('Kirby_sheet.png')
+        self.jump_sound = load_wav('jump.wav')
+        self.jump_sound.set_volume(32)
+        self.inhale_sound = load_wav('inhale.wav')
+        self.inhale_sound.set_volume(32)
+        self.Shoot_sound = load_wav('Shoot.wav')
+        self.Shoot_sound.set_volume(32)
+        self.Fall_sound = load_wav('Fall.wav')
+        self.Fall_sound.set_volume(32)
 
         self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
         self.knockback_timer = 0.0
