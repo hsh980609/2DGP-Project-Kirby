@@ -25,6 +25,11 @@ class Boss:
             Boss.image = load_image('Boss.png')
         self.Boss_2_image =load_image('Boss_2.png')
 
+        self.Shout_sound = load_wav('Boss_Shout.wav')
+        self.Shout_sound.set_volume(32)
+        self.land_sound = load_wav('Boss_land.wav')
+        self.land_sound.set_volume(32)
+
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
         self.x, self.y = 700, 200
@@ -141,6 +146,9 @@ class Boss:
 
             # 바닥밟음 - 보스룸에서는 바닥과의 충돌 처리만 계산해도 됨.
             if min_collision == collision_b:
+                if self.y_velocity < -100: # 공중에서 착지하는 순간에만 재생 - 떨어지는 속도가 있을 경우
+                    self.land_sound.play()
+
                 self.y += collision_b  # 뚫고 들어간 만큼 위로 밀어올림
                 self.y_velocity = 0  # 낙하 속도 초기화 (안 멈추면 계속 떨어지려 함)
 
@@ -232,6 +240,7 @@ class Boss:
 
         if self.shout_timer < game_framework.frame_time * 1.5:
             print("몬스터 소환")
+            self.Shout_sound.play()
             new_monster = Monster(random.randint(100,700),600)
             game_world.add_object(new_monster,3)
             game_world.add_collision_pair('monster:ground', new_monster,None)# 땅은 모드에서 등록해놓음
