@@ -13,7 +13,7 @@ class Star:
 
     def __init__(self, x =400,y=300, dir = 1):
         if Star.image == None:
-            Star.image = load_image('Star.png')
+            Star.image = load_image('resources/Kirby/Star.png')
         self.x, self.y = x, y
         self.dir = dir
         self.start_x = x

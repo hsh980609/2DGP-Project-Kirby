@@ -22,12 +22,12 @@ class Boss:
     image = None
     def __init__(self):
         if Boss.image == None:
-            Boss.image = load_image('Boss.png')
-        self.Boss_2_image =load_image('Boss_2.png')
+            Boss.image = load_image('resources/KingDedede/Boss.png')
+        self.Boss_2_image =load_image('resources/KingDedede/Boss_2.png')
 
-        self.Shout_sound = load_wav('Boss_Shout.wav')
+        self.Shout_sound = load_wav('resources/Sounds/Boss_Shout.wav')
         self.Shout_sound.set_volume(32)
-        self.land_sound = load_wav('Boss_land.wav')
+        self.land_sound = load_wav('resources/Sounds/Boss_land.wav')
         self.land_sound.set_volume(32)
 
         self.y_velocity = 0.0
@@ -36,7 +36,7 @@ class Boss:
         self.hp = 3
         self.frame = 0
         self.dir = 1
-        self.font = load_font('ENCR10B.TTF', 16)
+        self.font = load_font('resources/ENCR10B.TTF', 16)
 
         self.pattern =0
         self.is_thinking = False  # 생각 중인지 체크하는 플래그

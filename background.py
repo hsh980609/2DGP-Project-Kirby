@@ -3,7 +3,7 @@ import common
 
 class Background:
     def __init__(self):
-        self.image = load_image('Backgrounds.png')
+        self.image = load_image('resources/map/Backgrounds.png')
 
         self.clip_w = self.image.w // 3
         self.clip_h = self.image.h // 3
@@ -20,7 +20,7 @@ class Background:
 
 class Boss_Background:
     def __init__(self):
-        self.image = load_image('boss_stage.png')
+        self.image = load_image('resources/map/boss_stage.png')
 
     def update(self):
         pass

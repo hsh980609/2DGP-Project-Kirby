@@ -48,7 +48,7 @@ def init():
     global stage
 
     running = True
-    bgm = load_music('07 Green Greens.mp3')
+    bgm = load_music('resources/Sounds/07 Green Greens.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
 

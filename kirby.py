@@ -459,26 +459,26 @@ class Kirby:
         self.star_bullet = False # Fire_star 쓸수있는지
         self.hp = 5
 
-        self.image = load_image('Kirby_sheet.png')
-        self.jump_sound = load_wav('jump.wav')
+        self.image = load_image('resources/Kirby/Kirby_sheet.png')
+        self.jump_sound = load_wav('resources/Sounds/jump.wav')
         self.jump_sound.set_volume(32)
-        self.inhale_sound = load_wav('inhale.wav')
+        self.inhale_sound = load_wav('resources/Sounds/inhale.wav')
         self.inhale_sound.set_volume(32)
-        self.Shoot_sound = load_wav('Shoot.wav')
+        self.Shoot_sound = load_wav('resources/Sounds/Shoot.wav')
         self.Shoot_sound.set_volume(32)
-        self.Fall_sound = load_wav('Fall.wav')
+        self.Fall_sound = load_wav('resources/Sounds/Fall.wav')
         self.Fall_sound.set_volume(32)
-        self.knockback_sound = load_wav('knockback.wav')
+        self.knockback_sound = load_wav('resources/Sounds/knockback.wav')
         self.knockback_sound.set_volume(32)
-        self.Run_sound = load_wav('Run.wav')
+        self.Run_sound = load_wav('resources/Sounds/Run.wav')
         self.Run_sound.set_volume(32)
-        self.Run_stop_sound = load_wav('Run_stop.wav')
+        self.Run_stop_sound = load_wav('resources/Sounds/Run_stop.wav')
         self.Run_stop_sound.set_volume(32)
 
         self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
         self.knockback_timer = 0.0
         self.invincible_timer = 0.0
-        self.font = load_font('ENCR10B.TTF', 16)
+        self.font = load_font('resources/ENCR10B.TTF', 16)
 
         self.IDLE = Idle(self)
         self.SLEEP = Sleep(self)

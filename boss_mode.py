@@ -17,11 +17,11 @@ def init():
     print("보스룸 시작")
     global bgm, victory_bgm,victory_played, boss, victory_timer, kirby
 
-    bgm = load_music('08 vs. Boss 1.mp3')
+    bgm = load_music('resources/Sounds/08 vs. Boss 1.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
 
-    victory_bgm = load_music('17 Kirby Clear Dance 1.mp3')
+    victory_bgm = load_music('resources/Sounds/17 Kirby Clear Dance 1.mp3')
     victory_bgm.set_volume(64)
     victory_played = False
     victory_timer = 0

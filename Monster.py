@@ -33,7 +33,7 @@ class Monster:
 
     def __init__(self,x,y):
         if Monster.image == None:
-            Monster.image = load_image('Monster.png')
+            Monster.image = load_image('resources/KingDedede/Monster.png')
         self.x, self.y = x, y
         self.y_velocity = 0.0
         self.gravity = 1000.0  # 중력

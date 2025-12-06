@@ -2,7 +2,7 @@ from pico2d import *
 
 class Stage:
     def __init__(self):
-        self.image = load_image('Stage_1.png')
+        self.image = load_image('resources/map/Stage_1.png')
 
         self.clip_w = self.image.w
         self.clip_h = self.image.h
