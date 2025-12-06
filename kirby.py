@@ -445,6 +445,8 @@ class Kirby:
         self.Shoot_sound.set_volume(32)
         self.Fall_sound = load_wav('Fall.wav')
         self.Fall_sound.set_volume(32)
+        self.knockback_sound = load_wav('knockback.wav')
+        self.knockback_sound.set_volume(32)
 
         self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
         self.knockback_timer = 0.0
@@ -530,6 +532,7 @@ class Kirby:
                 #여기서 Swallowed 상태로 변경
                 self.state_machine.change_state(self.SWALLOWED,('SWALLOWED',None))
             elif self.knockback_timer <= 0:
+                self.knockback_sound.play()
                 print("커비 몬스터 충돌")
                 self.hp -= 1
                 self.knockback_timer = 0.5
@@ -567,6 +570,7 @@ class Kirby:
             if other.state == 'Death':
                 return
             if self.knockback_timer <= 0:
+                self.knockback_sound.play()
                 print("커비 보스 충돌")
                 self.hp -= 1
                 self.knockback_timer = 0.5

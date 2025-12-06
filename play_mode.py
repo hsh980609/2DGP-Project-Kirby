@@ -23,7 +23,7 @@ MAP_RIGHT_LIMIT = 1950
 
 PORTAL_X_MIN = 1830
 PORTAL_X_MAX = 1870
-
+bgm = None
 def handle_events():
     global running
 
@@ -42,11 +42,15 @@ def handle_events():
             kirby.handle_event(event)
 
 def init():
+    global bgm
     global kirby
     global running
     global stage
 
     running = True
+    bgm = load_music('07 Green Greens.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
     background = Background()
     game_world.add_object(background, 0)
@@ -110,7 +114,9 @@ def draw():
     update_canvas()
 
 def finish():
+    global bgm
     global kirby
+    del bgm
     game_world.clear()
     kirby = None
 

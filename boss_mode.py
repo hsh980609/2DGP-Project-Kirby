@@ -7,9 +7,15 @@ from background import Boss_Background
 from stage import Ground
 from Boss import Boss
 
+bgm = None
+
 def init():
     print("보스룸 시작")
+    global bgm
     global kirby
+    bgm = load_music('08 vs. Boss 1.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
     background = Boss_Background()
     game_world.add_object(background, 0)
