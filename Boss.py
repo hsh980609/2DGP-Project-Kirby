@@ -33,7 +33,7 @@ class Boss:
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
         self.x, self.y = 700, 200
-        self.hp = 1
+        self.hp = 3
         self.frame = 0
         self.dir = 1
         self.font = load_font('ENCR10B.TTF', 16)
@@ -76,7 +76,7 @@ class Boss:
         if self.state == 'Hit':
             self.hit_timer += game_framework.frame_time
 
-            if self.hit_timer > 2.0:
+            if self.hit_timer > 0.5:
                 self.hit_timer = 0
                 self.state = 'Idle'
                 self.is_thinking = True  # 맞았으니 잠깐 생각
@@ -130,7 +130,19 @@ class Boss:
         draw_circle(screen_x, self.y, 200,255,255,255)
 
     def get_bb(self):
-        return self.x -100, self.y - 130, self.x + 100, self.y + 100
+        l = self.x - 100
+        b = self.y - 130
+        r = self.x + 100
+        t = self.y + 100
+
+        # 공격상태라면 바운딩박스 범위를 늘려서 망치도 충격판정나게.
+        if self.state == 'Attack':
+            if self.dir == 1:
+                r += 100
+            else:
+                l -= 100
+
+        return l, b, r, t
 
     def handle_collision(self, group, other):
         if group == 'boss:ground':
@@ -317,6 +329,6 @@ class Boss:
         c_nearby = Condition('Is Kirby Nearby',self.is_kirby_nearby,1000)
         seq_chase =Sequence("Chase Sequence",c_nearby,Pattern_Selector)
 
-        root = Selector('Root',seq_think,seq_atk,seq_chase)
+        root = Selector('Root',seq_think, seq_atk,seq_chase)
         self.bt = BehaviorTree(root)
 
