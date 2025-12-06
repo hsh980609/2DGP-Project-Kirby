@@ -317,6 +317,6 @@ class Boss:
         c_nearby = Condition('Is Kirby Nearby',self.is_kirby_nearby,1000)
         seq_chase =Sequence("Chase Sequence",c_nearby,Pattern_Selector)
 
-        root = Selector('Root',seq_atk,seq_think,seq_chase)
+        root = Selector('Root',seq_think,seq_atk,seq_chase)
         self.bt = BehaviorTree(root)
 
