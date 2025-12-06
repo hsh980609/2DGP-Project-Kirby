@@ -30,8 +30,9 @@ class Ground:
         pass
 
     def draw(self, offset_x=0):
-        l, b, r, t = self.get_bb()
-        draw_rectangle(l - offset_x, b, r - offset_x, t)
+        # l, b, r, t = self.get_bb()
+        # draw_rectangle(l - offset_x, b, r - offset_x, t)
+        pass
 
     # 발판은 충돌 당해도 아무것도 하지 않음
     def handle_collision(self, group, other):

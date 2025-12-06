@@ -126,8 +126,8 @@ class Boss:
             target_image.clip_composite_draw(sprite_x, sprite_y, sprite_w, sprite_h, 0, 'h', screen_x, self.y, 300, 300)
 
         self.font.draw(screen_x - 40, self.y + 80, f'HP: {self.hp:.0f}', (255, 255, 0))
-        draw_rectangle(*self.get_bb())
-        draw_circle(screen_x, self.y, 200,255,255,255)
+        # draw_rectangle(*self.get_bb())
+        # draw_circle(screen_x, self.y, 200,255,255,255)
 
     def get_bb(self):
         l = self.x - 100

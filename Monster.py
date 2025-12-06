@@ -100,9 +100,8 @@ class Monster:
             else:
                 self.image.clip_composite_draw(M_left, 120, 30, 30, 0, 'h', screen_x, self.y, 100, 100)
 
-        l, b, r, t = self.get_bb()
-        draw_rectangle(l - offset_x, b, r - offset_x, t)
-        # draw_rectangle(*self.get_bb())
+        # l, b, r, t = self.get_bb()
+        # # draw_rectangle(l - offset_x, b, r - offset_x, t)
 
     def get_bb(self):
         return self.x - 30, self.y - 45, self.x + 30, self.y + 15

@@ -540,7 +540,7 @@ class Kirby:
         self.font.draw(screen_x - 40, self.y + 80, f'HP: {self.hp:.0f}', (255, 255, 0))
         self.font.draw(screen_x - 60, self.y + 60,f'X: {self.x:.0f}, Y: {self.y:.0f}',(255, 255, 0))
         l,b,r,t = self.get_bb()
-        draw_rectangle(l-offset_x,b,r-offset_x,t)
+        # draw_rectangle(l-offset_x,b,r-offset_x,t)
 
     def fire_star(self):
         print("Fire Star!")
