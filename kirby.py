@@ -477,6 +477,7 @@ class Kirby:
 
         self.last_state = 0 # 0이면 walk, 1이면 run 3이면 Fly
         self.knockback_timer = 0.0
+        self.invincible_timer = 0.0
         self.font = load_font('ENCR10B.TTF', 16)
 
         self.IDLE = Idle(self)
@@ -515,6 +516,9 @@ class Kirby:
         if self.hp <= 0:
             print('Game Over')
             game_framework.quit()
+
+        if self.invincible_timer > 0:
+            self.invincible_timer -= game_framework.frame_time
 
         if self.knockback_timer > 0:
             self.knockback_timer -= game_framework.frame_time
@@ -556,7 +560,7 @@ class Kirby:
         self.state_machine.change_state(self.DANCE,('VICTORY',None))
     def handle_collision(self, group, other):
         if group == 'kirby:monster':
-            if self.knockback_timer > 0: # 넉백중이라면 충돌처리 X
+            if self.knockback_timer > 0 or self.invincible_timer > 0: # 넉백중이라면 충돌처리 X
                 return
             # 석션 상태라면 몬스터 삼켜짐 처리
             if self.state_machine.cur_state == self.SUCTION:
@@ -569,6 +573,8 @@ class Kirby:
                 print("커비 몬스터 충돌")
                 self.hp -= 1
                 self.knockback_timer = 0.5
+                self.invincible_timer = 1.0
+
                 if self.x < other.x:
                     self.dir = -1
                 else:
@@ -577,12 +583,14 @@ class Kirby:
         elif group == 'kirby:boss':
             if other.state == 'Death':
                 return
-            if self.knockback_timer > 0: # 넉백중이라면 충돌처리 X
+            if self.knockback_timer > 0 or self.invincible_timer > 0: # 넉백중이라면 충돌처리 X
                 return
             self.knockback_sound.play()
             print("커비 보스 충돌")
             self.hp -= 1
             self.knockback_timer = 0.5
+            self.invincible_timer = 1.0
+
             if self.x < other.x:
                 self.dir = -1
             else:
