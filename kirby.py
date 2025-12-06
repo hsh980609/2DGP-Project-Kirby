@@ -421,6 +421,27 @@ class Shoot:
         else:  # face_dir == -1: # left
             self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 29, 2788, 29, 26, 0,'h', screen_x, self.Kirby.y,100,100)
 
+class Dance:
+    def __init__(self, Kirby):
+        self.Kirby = Kirby
+
+    def enter(self,e):
+        self.Kirby.dir=0
+        self.Kirby.frame = 0
+
+    def do(self):
+        self.Kirby.frame = (self.Kirby.frame + 0.2 * ACTION_PER_TIME * game_framework.frame_time) % 4
+
+    def exit(self,e):
+        pass
+
+    def draw(self,offset_x=0):
+        screen_x = self.Kirby.x - offset_x
+        if self.Kirby.face_dir == 1:  # right
+            self.Kirby.image.clip_draw(int(self.Kirby.frame) * 30, 2880, 30, 30, screen_x, self.Kirby.y,100,100)
+        else:  # face_dir == -1: # left
+            self.Kirby.image.clip_composite_draw(int(self.Kirby.frame) * 30, 2880, 30, 30, 0,'h', screen_x, self.Kirby.y,100,100)
+
 class Kirby:
     def __init__(self):
         self.x, self.y = 1800, 100 # -900 / 1800x
@@ -463,6 +484,7 @@ class Kirby:
         self.SWALLOWED = Swallowed(self)
         self.SWALLOWED_WALK = Swallowed_Walk(self)
         self.SHOOT = Shoot(self)
+        self.DANCE = Dance(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -478,6 +500,7 @@ class Kirby:
                 self.SWALLOWED:{right_down: self.SWALLOWED_WALK, left_down: self.SWALLOWED_WALK,z_down: self.SHOOT},
                 self.SWALLOWED_WALK:{right_up: self.SWALLOWED, left_up: self.SWALLOWED,},
                 self.SHOOT:{},
+                self.DANCE:{}
 
              }
         )
@@ -523,6 +546,8 @@ class Kirby:
     def get_bb(self):
         return self.x -35, self.y - 30, self.x + 40, self.y + 40
 
+    def victory(self):
+        self.state_machine.change_state(self.DANCE,('VICTORY',None))
     def handle_collision(self, group, other):
         if group == 'kirby:monster':
             # 석션 상태라면 몬스터 삼켜짐 처리
@@ -578,7 +603,6 @@ class Kirby:
                     self.dir = -1
                 else:
                     self.dir = 1
-
 
     def handle_event(self, event):
         e = ('INPUT', event)
