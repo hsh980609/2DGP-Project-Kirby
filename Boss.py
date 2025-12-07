@@ -33,7 +33,7 @@ class Boss:
         self.y_velocity = 0.0
         self.gravity = 1000.0 # 중력
         self.x, self.y = 700, 200
-        self.hp = 2
+        self.hp = 3
         self.frame = 0
         self.dir = 1
         self.font = load_font('resources/ENCR10B.TTF', 16)

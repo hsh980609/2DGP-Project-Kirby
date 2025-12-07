@@ -490,7 +490,7 @@ class Kirby:
         self.gravity = 1000
         self.on_ground = False
         self.star_bullet = False # Fire_star 쓸수있는지
-        self.hp = 10
+        self.hp = 5
 
         self.image = load_image('resources/Kirby/Kirby_sheet.png')
         self.jump_sound = load_wav('resources/Sounds/jump.wav')
