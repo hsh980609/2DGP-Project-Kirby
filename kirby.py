@@ -479,7 +479,7 @@ class Dance:
 
 class Kirby:
     def __init__(self):
-        self.x, self.y = 1800, 100 # -900 / 1800x
+        self.x, self.y = -900, 100 # -900 / 1800x
         self.y_start = 0
 
         self.frame = 0
